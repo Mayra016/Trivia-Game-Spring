@@ -1,0 +1,191 @@
+// Zwischen dem <!DOCTYPE html> und <head>
+<html xmlns:th="http://www.thymeleaf.org">
+
+// head
+<head th:fragment="head"> </head>
+
+// Bootstrap mit Thymeleaf
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+
+// header
+<header th:fragment="head"> </header>
+
+// footer
+<footer th:fragment="footer">
+    <script type="text/javascript" th:src="@{/js/jquery-3.3.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/popper.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+</footer>
+
+// th:href="@{redireccionar}"
+<a href="/logout" th:href="@{#}" onclick="$('#form').submit();">
+                <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Logout
+              </a>
+// th:action              
+             <form style="visibility: hidden" id="form" method="post" action="#" th:action="@{/logout}"></form>
+     
+     
+// Um die andere Seiten auch diese Tag-Templates zu benutzen, soll man diese Code benutzen
+    **Das Ordner Template hat ein Ordner namens plantilla, das das Archiv template.html enthält.
+
+// th:text Variabelwerte auf die Website zu zeigen
+<th th:text="#{seedstarter.datePlanted}">Date Planted</th>
+
+<header th:replace="plantilla/template :: header"></header> 
+<footer th:replace="plantilla/template :: footer"></footer>            
+
+// th:unless if diese Erforderung ist erfüllt, dann wird diesen Codeblock gezeigt
+<div class="seedstarterlist" th:unless="${#lists.isEmpty(allSeedStarters)}">
+
+// Nachrichten auf weitere Sprachen zu zeigen
+    **Auf Spring Configuration
+    @Bean
+public ResourceBundleMessageSource messageSource() {
+    ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+    messageSource.setBasename("Messages");
+    return messageSource;
+}
+    ** Name der Archiven: Messages_es.properties
+title.list=Lista de semilleros
+
+date.format=dd/MM/yyyy
+bool.true=sí
+bool.false=no
+
+seedstarter.datePlanted=Fecha de plantación
+seedstarter.covered=Cubierto
+seedstarter.type=Tipo
+seedstarter.features=Características
+seedstarter.rows=Filas
+
+seedstarter.type.WOOD=Madera
+seedstarter.type.PLASTIC=Plástico
+
+seedstarter.feature.SEEDSTARTER_SPECIFIC_SUBSTRATE=Sustrato específico para semilleros
+seedstarter.feature.FERTILIZER=Fertilizante
+seedstarter.feature.PH_CORRECTOR=Corrector de PH    
+    
+    ** Um die geübersetzte Informationen auf den Bilschirm zu zeigen, benutzt man diese Referenz. Wenn boolean true ist, wird den entsprechenden Text angezeigt.
+    <td th:text="${{sb.datePlanted}}">13/01/2011</td>
+    <td th:text="#{|bool.${sb.covered}|}">yes</td>
+
+
+// Eine Liste mit jede einzige Eingabe von dieser Eigenschaft. Der geübersetzte Name und seine entsprechende Werte anzeigen
+
+<ul>
+  <li th:each="feat : ${allFeatures}">
+    <input type="checkbox" th:field="*{features}" th:value="${feat}" />
+    <label th:for="${#ids.prev('features')}" 
+           th:text="#{${'seedstarter.feature.' + feat}}">Heating</label>
+  </li>
+</ul>
+
+// Dropdown menu mit jeden einzigen Eigenschaften von einem Model
+<select th:field="*{type}">
+  <option th:each="type : ${allTypes}" 
+          th:value="${type}" 
+          th:text="#{${'seedstarter.type.' + type}}">Wireframe</option>
+</select>
+
+// Dynamische Liste muss diese andere Code benutzen, weil die Listelänge sich ändert.
+        <select th:field="*{rows[__${rowStat.index}__].variety}">
+          <option th:each="var : ${allVarieties}" 
+                  th:value="${var.id}" 
+                  th:text="${var.name}">Thymus Thymi</option>
+        </select>
+
+// Text von einem Model auf den Bildschirm anzeigen
+<p th:text="${1. {spiel.hinweis1}}">Erste Hinweise</p>
+<p th:text="${spiel.hinweis1}">1. </p>
+<p th:text="${'1. ' + #spiel.hinweis}">...</p>
+
+
+// Nur einige spezifische Fragmente auf den Bildschirm zu zeigen
+    ** Fragment auswählen
+@Bean(name="content-part")
+@Scope("prototype")
+public ThymeleafView someViewBean() {
+    ThymeleafView view = new ThymeleafView("index"); // templateName = 'index'
+    view.setMarkupSelector("content");
+    return view;
+}
+
+    ** Eine Webseiteadresse zu diesem Fragment verbinden
+@RequestMapping("/showContentPart")
+public String showContentPart() {
+    ...
+    return "content-part";
+}  
+
+
+    ** Ein Aussehen für dieses Fragment festlegen
+<!DOCTYPE html>
+<html>
+  ...
+  <body>
+    ...
+    <div th:fragment="content">
+      Only this div will be rendered!
+    </div>
+    ...
+  </body>
+</html>    
+
+    ** Eine andere einfache Option, um nur einen Fragment anzuzeigen. Das passiert ohne das th:fragment, nur mit der Id
+@Bean(name="content-part")
+@Scope("prototype")
+public ThymeleafView someViewBean() {
+    ThymeleafView view = new ThymeleafView("index"); // templateName = 'index'
+    view.setMarkupSelector("#content");
+    return view;
+}
+
+<!DOCTYPE html>
+<html>
+  ...
+  <body>
+    ...
+    <div id="content">
+      Only this div will be rendered!
+    </div>
+    ...
+  </body>
+</html>    
+    
+// Von einer Seite zur Andere wechsel, ohne die genaue Websiteadresse zu kennen. Nur mit dem Controller
+public class ExampleController {
+
+    @RequestMapping("/data")
+    public String getData(Model model) { ... return "template" }
+
+    @RequestMapping("/data")
+    public String getDataParam(@RequestParam String type) { ... return "template" }
+
+}
+
+The following code will create a link to it:
+
+<a th:href="${(#mvc.url('EC#getData')).build()}">Get Data Param</a>
+<a th:href="${(#mvc.url('EC#getDataParam').arg(0,'internal')).build()}">Get Data Param</a>
+
+______
+
+11.1 Building URIs to controllers
+______
+
+
+
+Frage
+    th:fragment ist sowie eine Id?
+    
+    Um Inhalte auf die Repository zu speichern, soll man .add eher .save benutzen?
+    
+    Diese Blockcode zeigt zwei Divs, wählt nur das Content von index oder statt index zu zeigen, zeigt es content?
+    @RequestMapping("/showContentPart")
+public String showContentPart() {
+    ...
+    return "index :: content";
+}  
+    
+    
+

@@ -1,0 +1,215 @@
+body {
+    display: flex;
+    min-height: 100vh;
+    margin: 0;
+    align-items: center;
+    justify-content: left;
+    text-align: left;
+    background-color: #05587C;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0.7) 130%), #05587C;
+
+}
+
+.page-background {
+    width: 100%;
+    height: 100%;
+}
+
+.container {
+    text-align: left;
+    height: 100%;
+}
+
+.button {
+    font-family: 'Spicy Rice', serif;
+    font-size: 20px;
+    background-color: yellow;
+    border-color: #004554;
+    border-radius: 10px;
+    border-width: 5px;
+    width: 130px;
+    margin-bottom: 20px;
+    color: #023A43;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    text-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+}
+
+.button:hover {
+    border-color: #4EE3FB;
+    transform: scale(1.07);
+}
+
+.btns {
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+    align-items: center;
+    padding-top: 30px;
+}
+
+div .tittle, h1 {
+    border-color: #ffe100;
+    -webkit-text-stroke: 2px #ffe100;
+    text-stroke: 1px #ffe100;
+    font-family: 'Spicy Rice', serif; /* Corregir el nombre de la fuente */
+    color: #023A43;
+    text-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+    font-size: 60px;
+    padding: 5px;
+}
+
+.subtittle {
+    background-color: #023A43; /* Color de fondo */
+    padding: 15px; /* Ajusta el valor de padding según tus preferencias */
+	display: inline-block;
+}
+
+h2 {
+
+    color: #ffffff; /* Color del texto */
+    font-family: 'Spicy Rice', serif; /* Ejemplo de fuente */
+    font-size: 23px;
+   /* Ejemplo de tamaño de fuente */
+    margin: 0; /* Elimina el margen predeterminado del párrafo */
+}
+
+h3 {
+	background-color: #ffe100;
+	font-family: 'Spicy Rice', serif;
+	padding: 5px;
+}
+
+.clue {
+	display: inline-block;
+}
+
+.word-section {
+	display: inline-block;
+}
+
+p, span {
+	font-family: 'Bebas Neue', sans-serif;
+	color: white;
+	padding: 2px;
+	font-size: 20px;
+}
+
+
+.ornitorrinco img {
+	background-image: url('/images/ornitorrincoVF.png');
+	width: 200px;
+	height: 200px;
+	transition: transform 0.3s ease;
+}
+
+.ornitorrinco img:hover{
+	transform: translateY(-50px);
+}
+
+.word {
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	align-items: center;
+	position: relative;
+	text-align: center;
+	margin-top: 50px;
+}
+
+span {
+	display: block;
+	font-size: 35px;
+	position: absolute;
+	left: center;
+	top: -15px;
+	margin-top: auto;
+	text-align: center;
+	justify-items: center;
+	justify-content: center;
+	letter-spacing: 2px;
+	padding-left: -5px;
+
+}
+
+.letters {
+display: flex;
+  position: absolute;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 30px;
+  padding: 5px;
+  padding-left: 25px;
+  text-align: center;
+  letter-spacing: 10px;
+  margin-top: 20px;
+  top: -37px;
+  color: white;
+  left: 49.3%; /* Centra horizontalmente respecto al contenedor padre */
+  word-spacing: 25px;
+  transform: translateX(-50%);
+}
+
+
+.word-input{
+    /* Estilos para el input */
+    display: flex;
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 30px;
+    background-color: transparent;
+    border: 2px dashed #ccc;
+    border-spacing: 30px;
+    color: white;
+    border-radius: 10px;
+    margin-top: 20px;
+    padding: 5px;
+    padding-left: 13px;
+    text-align: center;
+    word-spacing: 6px;
+    letter-spacing: 10px;
+
+    /* Agrega más estilos según sea necesario */
+}
+
+
+/* Definir la animación */
+@keyframes rotateDashed {
+  0% {
+    background-position: 0 0; /* Posición inicial */
+  }
+  100% {
+    background-position: 20px 0; /* Posición final, ajusta según tus necesidades */
+  }
+}
+
+/* Aplicar la animación al borde */
+.dashed-border {
+  border-style: dashed;
+  border-width: 2px;
+  border-color: #000;
+  width: 200px; /* Ajusta el ancho según tus necesidades */
+  height: 200px; /* Ajusta la altura según tus necesidades */
+  animation: rotateDashed infinite linear infinite; /* Ajusta la duración y otros parámetros según tus necesidades */
+}
+
+.btn-div {
+	display: block;
+	flex-direction:column;
+	margin-top: 80px; 
+	text-align: center;
+	justify-content: center;
+	justify-items: center;
+	left: 50%; /* Centra horizontalmente respecto al contenedor padre */
+    word-spacing: 25px;    
+    transform: translateX(-50%);
+    margin-left: 50%;
+
+}
+
+
+
+
+
+
