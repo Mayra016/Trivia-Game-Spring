@@ -29,6 +29,12 @@ public class TriviaService {
     TriviaRepository repository;
     Long currentLevelService;
     Trivia currentGame;
+    String appLanguage;
+    
+    // Set app language to evaluate from which data basis should be the level infos get from
+    public void setLanguage(String language) {
+    	this.appLanguage = language;
+    }
     
     // CRUD
     

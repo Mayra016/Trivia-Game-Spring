@@ -35,6 +35,7 @@ public class TriviaController {
     @Autowired
     private LocaleResolver localeResolver;
 
+
     
     // READ
     @GetMapping("favicon.ico")
@@ -59,6 +60,7 @@ public class TriviaController {
     
     @GetMapping("/menu/{language}")
     public String changeLanguage(@PathVariable String language, HttpServletRequest request) {
+    	service.setLanguage(language);
     	Locale newLocale;
     	if ("ES".equals(language)) {
             newLocale = new Locale("es");
