@@ -140,20 +140,25 @@ public class TriviaService {
     
     // COMPARE ANSWER
     public boolean compareAnswer(Long level, String userInput) {
-        Optional<Trivia> currentLevel = repository.findById(level);
-        if (currentLevel.isPresent()) {
-        	Trivia game = currentLevel.get();
-	        String levelAnswer = game.getWord();
-	        if( levelAnswer.equalsIgnoreCase(userInput) ) {
-	            return true;
-	        } else if (userInput=="" || userInput.contains("  ") || userInput.contains(" ")) {
-	        	return false;
-	        } else {
-	            return false;
-	        }
-        } else {
-        	return false;
-        }
+    	try {
+            Optional<Trivia> currentLevel = repository.findById(level);
+            if (currentLevel.isPresent()) {
+            	Trivia game = currentLevel.get();
+    	        String levelAnswer = game.getWord();
+    	        if( levelAnswer.equalsIgnoreCase(userInput) ) {
+    	            return true;
+    	        } else if (userInput.trim().isEmpty() || userInput == null) {
+    	        	return false;
+    	        } else {
+    	            return false;
+    	        }
+            } else {
+            	return false;
+            }
+    	} catch(Exception e) {
+    		System.out.println(e.toString());
+    		return false;
+    	}
     }
     
     // CHECK TIME 

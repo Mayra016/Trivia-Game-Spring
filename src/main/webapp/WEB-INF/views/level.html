@@ -64,6 +64,9 @@
 	function checkAnswer() {
         var level = /*[[${trivia.level}]]*/;
         var userInput = document.getElementById('userInput').value;
+        if (userInput == null || userInput.trim() === "") {
+            userInput="!!@@";
+        }
         var url = '/checkAnswer/' + level + '/' + userInput;	    
 	    console.log("Userinput javascript", userInput);
 	    window.location.href = url;

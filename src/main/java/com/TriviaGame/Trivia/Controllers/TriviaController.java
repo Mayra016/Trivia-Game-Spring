@@ -85,6 +85,9 @@ public class TriviaController {
     @GetMapping("/checkAnswer/{level}/{userInput}")
     public String checkAnswer(@PathVariable Long level, @PathVariable String userInput, Model model) {
         Trivia trivia = service.getLevel(level);
+        if (userInput==null) {
+        	userInput = "";
+        }
         if (persistentData.getLifes()!=4) {
 	        trivia.setLifes(persistentData.getLifes());
 	        trivia.setPlayedLevels(persistentData.getPlayedLevels());
@@ -137,10 +140,10 @@ public class TriviaController {
     	try {
     		service.addNewLevel(level, clue1, clue2, clue3, word);
     		return "El level " + level + "fue agregado a la base de datos";
-    	} catch (Exception e){
+    	} catch (Exception e) {
     		return "Hubo un problema al agregar el level " + level;
     	}
-    
+    }
     
     @GetMapping("updateData/{initialLevel}/{finalLevel}")
     public String updateDataBaseLevels(@PathVariable int initialLevel, @PathVariable int finalLevel) {

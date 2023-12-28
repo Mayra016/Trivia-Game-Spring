@@ -8,11 +8,14 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=EB+Garamond:wght@600;700;800&family=Spicy+Rice&display=swap" rel="stylesheet">
 	<link rel="icon" href="/images/ornitorrincoVF.png" type="image/x-icon">
-	<link rel="stylesheet" type="text/css" href="/css/level.css">
+	<link rel="stylesheet" type="text/css" href="/css/lost.css">
+	<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
 </head>
-<body>
+<body onload="deleteUser()">
 	<div class="page-background">
 		<div class="container" th:object="${trivia}">
 			<div class="tittle">
@@ -39,12 +42,22 @@
 				<p th:text="${trivia.clue1}"></p>
 				<p th:text="${trivia.clue2}"></p>
 				<p th:text="${trivia.clue3}"></p>
-				<div>
-					<h2>¡Has perdido!</h2>
-					<p class="score-text">Tu score fue: <p class="score" th:text="${trivia.score}"></p></p>
-					<p class="levels-text">Has jugado: <p class="levels"></p></p>
-					<input type="button" class="back-to-menu" value="Jugar otra vez" onclick="backToMenu()">
-				</div>
+				<template id="my-template" class="my-template" color="#05587C">
+				  <swal-title color="#ffffff">
+				    ¡Has perdido!
+				  </swal-title>
+				  <swal-icon type="warning" color="red"></swal-icon>
+				  <swal-button class="button" color="#05587C" text-color="#000000" type="confirm" onclick="backToMenu()">
+				    Juega otra vez
+				  </swal-button>
+				  <swal-param name="allowEscapeKey" value="false" />
+				  <swal-param
+				    name="customClass"
+				    value='{ "popup": "my-popup" }' />
+				  <swal-function-param
+				    name="didOpen"
+				    value="popup => console.log(popup)" />
+				</template>
 			</div>
 		
 			<div class="word-section">
@@ -59,7 +72,7 @@
 				
 			</div>
 			<div class="btn-div">
-				<input class="button" id="userInput" type="button" value="ENVIAR" onclick="checkAnswer()"/>
+				<input class="button" id="userInput" type="button" value="ENVIAR" onclick=""/>
 			</div>
 		
 		</div>
@@ -67,10 +80,32 @@
 	</div>
 		
 <script th:inline="javascript">
-	function backToMenu() {
-        var url = '/menu';	    
-	    window.location.href = url;
-	};	
-</script>	
+    document.addEventListener("DOMContentLoaded", function() {
+        deleteUser();
+    });
+
+    function deleteUser() {
+        var scoreElement = document.getElementById("score");
+        console.log("Se ha llamado la función");
+
+        Swal.fire({
+			customClass: { confirmButton: 'swalBtnColor' },
+            template: "#my-template"
+        })
+        .then((result) => {
+            if (result.isConfirmed) {
+                var url = "/menu";
+                window.location.href = url;
+            }
+        });
+
+
+    }
+    function backToMenu() {
+		var url = "/menu";
+        window.location.href = url;
+	}
+</script>
+
 </body>
 </html>
