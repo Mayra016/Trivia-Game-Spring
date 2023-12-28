@@ -38,6 +38,10 @@ public class TriviaController {
     
     @GetMapping("menu") 
     public String getMenu() {
+    	if (persistentData!=null) {
+    		persistentData = new TriviaDTO();
+    	}
+    
     	return "menu";
     }
     
@@ -109,9 +113,11 @@ public class TriviaController {
         		model.addAttribute("persistentData", persistentData);
         		return "level";
         	}
-        	if ( win == false && lifes <= -2) {
+        	if ( win == false && lifes <= 0) {
         		trivia.getPlayedLevels().clear();
 	        	service.calculateScore(level);
+	        	trivia = new Trivia();
+	        	trivia = null;
 	        	model.addAttribute("persistentData", persistentData);
 	        	return "lost";
 	        	

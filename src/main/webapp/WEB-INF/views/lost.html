@@ -8,15 +8,24 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=EB+Garamond:wght@600;700;800&family=Spicy+Rice&display=swap" rel="stylesheet">
 	<link rel="icon" href="/images/ornitorrincoVF.png" type="image/x-icon">
-	<link rel="stylesheet" type="text/css" href="/css/lost.css">
+	<link rel="stylesheet" type="text/css" href="/css/level.css">
 
 
 </head>
 <body>
 	<div class="page-background">
-		<div class="container" th:object="${game}">
+		<div class="container" th:object="${trivia}">
 			<div class="tittle">
 				<h1>TRIVIA</h1>
+				<th:block th:with="persistentLifes=${persistentData.lifes}"></th:block>
+				<div class="lives">
+				    <img th:each="life,iterStat : ${#numbers.sequence(1,  (persistentLifes == null || persistentLifes == -1) ? trivia.lifes : persistentLifes)}" 
+				         th:src="@{/images/heart.png}" 
+				         th:alt="Heart" 
+				         th:title="${'Life ' + (iterStat.index + 1)}"
+				         th:if="${trivia.lifes > 0}" />
+				</div>
+
 			</div>
 			<div class="subtittle">
 				<h2>¡Adivina la palabra!</h2>
@@ -27,9 +36,15 @@
 			</div>
 			
 			<div class="clues">
-				<p th:field="*{clue1}">1. hola</p>
-				<p th:field="*{clue2}">2. hola</p>
-				<p th:field="*{clue3}">3. hola</p>
+				<p th:text="${trivia.clue1}"></p>
+				<p th:text="${trivia.clue2}"></p>
+				<p th:text="${trivia.clue3}"></p>
+				<div>
+					<h2>¡Has perdido!</h2>
+					<p class="score-text">Tu score fue: <p class="score" th:text="${trivia.score}"></p></p>
+					<p class="levels-text">Has jugado: <p class="levels"></p></p>
+					<input type="button" class="back-to-menu" value="Jugar otra vez" onclick="backToMenu()">
+				</div>
 			</div>
 		
 			<div class="word-section">
@@ -37,27 +52,25 @@
 			</div>
 			
 			<div class="word">
-				<span th:field="*{underscores}">_ _ _ _ _ _</span>
-				<span class="letters">HO  HO</span>
-				<input th:field="*{userInput}" class="word-input" type="text" value="HOLAHO" />
-				<div>
-					<h2>¡Has perdido!</h2>
-					<div>
-						<p>Tu score fue: 							
-						</p>
-						<p th:field="*{score}"> </p>
-					</div>
-				</div>
+				<span th:text="${trivia.underscores}"></span>
+				<span class="letters" th:text="${trivia.letters}"></span>
+				<input th:field="${trivia.userInput}" class="word-input" type="text" />
+
+				
 			</div>
 			<div class="btn-div">
-				<input class="button" type="button" value="ENVIAR" onclick="window.location.href='@{/checkAnswer/{*level}}'"/>
+				<input class="button" id="userInput" type="button" value="ENVIAR" onclick="checkAnswer()"/>
 			</div>
-			
 		
 		</div>
 		
 	</div>
 		
-	
+<script th:inline="javascript">
+	function backToMenu() {
+        var url = '/menu';	    
+	    window.location.href = url;
+	};	
+</script>	
 </body>
 </html>
