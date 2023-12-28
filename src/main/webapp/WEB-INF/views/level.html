@@ -19,11 +19,12 @@
 				<h1>TRIVIA</h1>
 				<th:block th:with="persistentLifes=${persistentData.lifes}"></th:block>
 				<div class="lives">
-				    <img th:each="life,iterStat : ${#numbers.sequence(1,  (persistentLifes == null || persistentLifes == -1) ? trivia.lifes : persistentLifes)}" 
+				    <img th:each="life, iterStat : ${#numbers.sequence(1, (persistentLifes == null || persistentLifes == -1) ? trivia.lifes : persistentLifes)}"
 				         th:src="@{/images/heart.png}" 
 				         th:alt="Heart" 
 				         th:title="${'Life ' + (iterStat.index + 1)}"
-				         th:if="${trivia.lifes > 0}" />
+				         th:if="${trivia.lifes > 0 && iterStat.index < (trivia.lifes > 0 ? trivia.lifes : persistentLifes)}" />
+
 				</div>
 
 			</div>

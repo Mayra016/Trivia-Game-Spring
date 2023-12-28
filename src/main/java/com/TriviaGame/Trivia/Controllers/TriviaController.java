@@ -76,7 +76,7 @@ public class TriviaController {
         	System.out.println(trivia.getClue1() + trivia.getAlive() + "\n" + trivia.getLifes());       	
         	System.out.println(trivia.getWord() + "\n" + trivia.getStartTime());       	
 
-        } else if (trivia!=null && persistentData.getLifes()>4) {        	
+        } else if (trivia!=null && persistentData.getLifes()<4) {        	
         	System.out.println("Usando el persistentData");
         	trivia.setStartTime();
         	trivia.setLifes(persistentData.getLifes());
