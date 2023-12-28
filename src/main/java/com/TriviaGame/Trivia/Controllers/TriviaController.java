@@ -45,6 +45,11 @@ public class TriviaController {
     	return "menu";
     }
     
+    @GetMapping("languages") 
+    public String getLanguages() {
+    	return "languages";
+    }
+    
     @GetMapping("levels") 
     public String getLevels(Model model) {
     	List<Trivia> levels = service.findAll();

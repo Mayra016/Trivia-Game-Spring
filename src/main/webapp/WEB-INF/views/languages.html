@@ -19,9 +19,22 @@
 			</div>
 			
 			<div class="btns">
-				<input class="button" type="button" onclick="redirectToNextLevel()" value="Jugar">
-				<input class="button" type="button" onclick="languages()" value="Idioma">
-				<input class="button" onclick="info()" type="button" value="Información">
+				<button class="button-flags" onclick="redirect('ES')">
+				    <img class="flags" src="/images/ES.png" alt="Español">
+				</button>
+				
+				<button class="button-flags" onclick="redirect('PT')">
+				    <img class="flags" src="/images/PT.png" alt="Português">
+				</button>
+				
+				<button class="button-flags" onclick="redirect('EN')">
+				    <img class="flags" src="/images/EN.png" alt="English">
+				</button>
+				
+				<button class="button-flags" onclick="redirect('DE')">
+				    <img class="flags" src="/images/DE.png" alt="Deutsch">
+				</button>
+
 			</div>	
 			<div class="ornitorrinco">
 				<img src="/images/ornitorrincoVF.png" alt="Logo ornitorrinco">
@@ -33,16 +46,8 @@
 		
 	</div>
 <script th:inline="javascript">
-    function redirectToNextLevel() {
-        var url = /*[[@{/nextLevel}]]*/ '';
-        window.location.href = url;
-    }
-    function languages() {
-        var url = "/languages";
-        window.location.href = url;
-    }
-        function info() {
-        var url = "/infos";
+    function redirect(language) {
+        var url = "/menu/" + language;
         window.location.href = url;
     }
 </script>		
