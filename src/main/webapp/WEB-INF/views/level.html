@@ -17,11 +17,13 @@
 		<div class="container" th:object="${trivia}">
 			<div class="tittle">
 				<h1>TRIVIA</h1>
+				<th:block th:with="persistentLifes=${persistentData.lifes}"></th:block>
 				<div class="lives">
-				    <img th:each="life,iterStat : ${#numbers.sequence(1, trivia.lifes)}" 
+				    <img th:each="life,iterStat : ${#numbers.sequence(1,  (persistentLifes == null || persistentLifes == -1) ? trivia.lifes : persistentLifes)}" 
 				         th:src="@{/images/heart.png}" 
 				         th:alt="Heart" 
-				         th:title="${'Life ' + iterStat.index}" />
+				         th:title="${'Life ' + (iterStat.index + 1)}"
+				         th:if="${trivia.lifes > 0}" />
 				</div>
 
 			</div>
@@ -37,7 +39,6 @@
 				<p th:text="${trivia.clue1}"></p>
 				<p th:text="${trivia.clue2}"></p>
 				<p th:text="${trivia.clue3}"></p>
-				<p th:text="${trivia.level}" id="level" type="hidden"></p>
 			</div>
 		
 			<div class="word-section">

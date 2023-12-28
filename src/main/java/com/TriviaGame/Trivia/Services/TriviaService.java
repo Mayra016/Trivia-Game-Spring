@@ -146,6 +146,8 @@ public class TriviaService {
 	        String levelAnswer = game.getWord();
 	        if( levelAnswer.equalsIgnoreCase(userInput) ) {
 	            return true;
+	        } else if (userInput=="" || userInput.contains("  ") || userInput.contains(" ")) {
+	        	return false;
 	        } else {
 	            return false;
 	        }
@@ -197,12 +199,12 @@ public class TriviaService {
     
     // REDUCE LIFE
     public Trivia reduceLife(byte lifes, Trivia level) {
-        if (lifes > 0) {
+        if (lifes > -1) {
         	level.setLifes(lifes-1);
         	currentGame.setLifes(lifes - 1);
         } else {
         	level.setAlive(false);
-        }  
+        }
         return level;
     }
     
@@ -226,15 +228,6 @@ public class TriviaService {
         if (!game.getPlayedLevels().contains(nextLevel)) {
                 Optional<Trivia> newLevel = repository.findById(nextLevel);
                 Trivia newGame = newLevel.get();
-                for (Long level: playedLevels) {
-                	if (game.getPlayedLevels().contains(level)) {
-                		
-                	} else {
-                		game.setPlayedLevels(level);
-                    	currentGame.setPlayedLevels(currentLevel);
-                	}
-                	
-                }
                 game.setLevel(newGame.getLevel());
                 game.setClue1(newGame.getClue1());
                 game.setClue2(newGame.getClue2());

@@ -164,9 +164,11 @@ public class Trivia {
     public boolean getAlive() {
         return this.alive;
     }
-    
-    public void setPlayedLevels(Long level) {
-        this.playedLevels.add(level);
+
+    public void setPlayedLevels(List<Long> levels) {
+    	if (levels!=null) {
+    		this.playedLevels = levels;
+    	}	
     }
     
     public List<Long> getPlayedLevels() {

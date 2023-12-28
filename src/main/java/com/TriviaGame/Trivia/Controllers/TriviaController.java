@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.TriviaGame.Trivia.Entities.Trivia;
+import com.TriviaGame.Trivia.Entities.TriviaDTO;
 import com.TriviaGame.Trivia.Services.TriviaService;
 
 
@@ -25,6 +26,8 @@ public class TriviaController {
 
     @Autowired
     TriviaService service;
+    @Autowired
+    TriviaDTO persistentData = new TriviaDTO();
     
     // READ
     @GetMapping("favicon.ico")
@@ -58,41 +61,63 @@ public class TriviaController {
     @GetMapping("/{level}")
     public String home(@PathVariable Long level, Model model) {
         Trivia trivia = service.getLevel(level);
-        if (trivia!=null) {
+        if (trivia!=null && persistentData.getLifes()==4) {
         	trivia.setStartTime();
+        	System.out.println("Nuevo nivel lifes: " + trivia.getLifes());
         	System.out.println(trivia.getClue1() + trivia.getAlive() + "\n" + trivia.getLifes());       	
-        	System.out.println(trivia.getWord() + "\n" + trivia.getStartTime());
-        	model.addAttribute("trivia", trivia);
-        }	
+        	System.out.println(trivia.getWord() + "\n" + trivia.getStartTime());       	
+
+        } else if (trivia!=null && persistentData.getLifes()>4) {        	
+        	System.out.println("Usando el persistentData");
+        	trivia.setStartTime();
+        	trivia.setLifes(persistentData.getLifes());
+        	trivia.setPlayedLevels(persistentData.getPlayedLevels());
+        }
+        model.addAttribute("trivia", trivia);
+        model.addAttribute("persistentData", persistentData);
         return "level"; 
     }
     
     @GetMapping("/checkAnswer/{level}/{userInput}")
     public String checkAnswer(@PathVariable Long level, @PathVariable String userInput, Model model) {
         Trivia trivia = service.getLevel(level);
+        if (persistentData.getLifes()!=4) {
+	        trivia.setLifes(persistentData.getLifes());
+	        trivia.setPlayedLevels(persistentData.getPlayedLevels());
+        }    
         if (trivia!=null) {
+        	
+        	System.out.println("Lifes (antes): " + trivia.getLifes());
         	byte lifes = trivia.getLifes();
         	model.addAttribute("trivia", trivia);
         	boolean win = service.compareAnswer(level, userInput); 
         	System.out.println(win);
         	if ( win &&  lifes > 0 ) {
         		System.out.println(win + "lifes>0");
-        
         		Trivia nextLevel = service.chooseNextLevel(trivia);
+        		persistentData.setLifes(lifes);
+        		persistentData.setPlayedLevels(trivia.getPlayedLevels(), level);
         		model.addAttribute("trivia", trivia);
+        		model.addAttribute("persistentData", persistentData);
         		return "redirect:/".concat(nextLevel.getLevel().toString());
         	} else if ( win == false && lifes > 0) {
         		System.out.println("repuesta" + win + "lifes>0");        	
         		trivia = service.reduceLife(lifes, trivia);
+        		persistentData.setLifes(trivia.getLifes());
+        		System.out.println("Lifes persistentData: " + persistentData.getLifes());
         		model.addAttribute("trivia", trivia);
+        		model.addAttribute("persistentData", persistentData);
         		return "level";
         	}
-        	if ( win == false && lifes <= 0) {
+        	if ( win == false && lifes <= -2) {
         		trivia.getPlayedLevels().clear();
 	        	service.calculateScore(level);
-	        	return "level";
+	        	model.addAttribute("persistentData", persistentData);
+	        	return "lost";
 	        	
         	}
+        	System.out.println("Lifes: " + trivia.getLifes());
+        	
         	model.addAttribute("trivia", trivia);
         }
         
