@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es" charset="UTF-8">
+
 <head>
     <meta charset="UTF-8">
     <title>Trivia Game Menu</title>
@@ -19,9 +21,9 @@
 			</div>
 			
 			<div class="btns">
-				<input class="button" type="button" onclick="redirectToNextLevel()" value="Jugar">
-				<input class="button" type="button" onclick="languages()" value="Idioma">
-				<input class="button" onclick="info()" type="button" value="Información">
+				<input class="button" type="button" onclick="redirectToNextLevel()" th:value="#{PLAY}">
+				<input class="button" type="button" onclick="languages()" th:value="#{LANGUAGE}">
+				<input class="button" onclick="info()" type="button" th:value="#{INFO}">
 			</div>	
 			<div class="ornitorrinco">
 				<img src="/images/ornitorrincoVF.png" alt="Logo ornitorrinco">

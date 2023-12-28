@@ -19,7 +19,7 @@
 	<div class="page-background">
 		<div class="container" th:object="${trivia}">
 			<div class="tittle">
-				<h1>TRIVIA</h1>
+				<h1 th:text="#{TRIVIA}">TRIVIA</h1>
 				<th:block th:with="persistentLifes=${persistentData.lifes}"></th:block>
 				<div class="lives">
 				    <img th:each="life,iterStat : ${#numbers.sequence(1,  (persistentLifes == null || persistentLifes == -1) ? trivia.lifes : persistentLifes)}" 
@@ -31,11 +31,11 @@
 
 			</div>
 			<div class="subtittle">
-				<h2>¡Adivina la palabra!</h2>
+				<h2 th:text="#{SUBTITTLE}">¡Adivina la palabra!</h2>
 			</div>
 			<br>
 			<div class="clue">
-				<h3>PISTAS</h3>
+				<h3 th:text="#{CLUES}">PISTAS</h3>
 			</div>
 			
 			<div class="clues">
@@ -43,11 +43,11 @@
 				<p th:text="${trivia.clue2}"></p>
 				<p th:text="${trivia.clue3}"></p>
 				<template id="my-template" class="my-template" color="#05587C">
-				  <swal-title color="#ffffff">
+				  <swal-title th:text="#{LOST}" color="#ffffff">
 				    ¡Has perdido!
 				  </swal-title>
 				  <swal-icon type="warning" color="red"></swal-icon>
-				  <swal-button class="button" color="#05587C" text-color="#000000" type="confirm" onclick="backToMenu()">
+				  <swal-button th:text="#{NEW-GAME}" class="button" color="#05587C" text-color="#000000" type="confirm" onclick="backToMenu()">
 				    Juega otra vez
 				  </swal-button>
 				  <swal-param name="allowEscapeKey" value="false" />
@@ -61,7 +61,7 @@
 			</div>
 		
 			<div class="word-section">
-				<h3>PALABRA</h3>
+				<h3 th:text="#{WORD-SECTION}">PALABRA</h3>
 			</div>
 			
 			<div class="word">
@@ -72,7 +72,7 @@
 				
 			</div>
 			<div class="btn-div">
-				<input class="button" id="userInput" type="button" value="ENVIAR" onclick=""/>
+				<input class="button" id="userInput" type="button" th:value="#{SEND}" onclick=""/>
 			</div>
 		
 		</div>

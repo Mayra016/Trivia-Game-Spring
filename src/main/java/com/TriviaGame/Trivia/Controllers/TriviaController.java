@@ -1,6 +1,7 @@
 package com.TriviaGame.Trivia.Controllers;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,9 @@ import com.TriviaGame.Trivia.Entities.Trivia;
 import com.TriviaGame.Trivia.Entities.TriviaDTO;
 import com.TriviaGame.Trivia.Services.TriviaService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.servlet.LocaleResolver;
+
 
 @Controller
 public class TriviaController {
@@ -28,6 +32,9 @@ public class TriviaController {
     TriviaService service;
     @Autowired
     TriviaDTO persistentData = new TriviaDTO();
+    @Autowired
+    private LocaleResolver localeResolver;
+
     
     // READ
     @GetMapping("favicon.ico")
@@ -48,6 +55,24 @@ public class TriviaController {
     @GetMapping("languages") 
     public String getLanguages() {
     	return "languages";
+    }
+    
+    @GetMapping("/menu/{language}")
+    public String changeLanguage(@PathVariable String language, HttpServletRequest request) {
+    	Locale newLocale;
+    	if ("ES".equals(language)) {
+            newLocale = new Locale("es");
+        } else if ("EN".equals(language)) {
+            newLocale = new Locale("en");
+        } else if ("PT".equals(language)) {
+            newLocale = new Locale("pt", "BR"); 
+        } else if ("DE".equals(language)) {
+            newLocale = new Locale("de");
+        } else {
+            newLocale = new Locale("en"); //default
+        }
+        localeResolver.setLocale(request, null, newLocale);   	
+    	return "redirect:/menu";
     }
     
     @GetMapping("levels") 
