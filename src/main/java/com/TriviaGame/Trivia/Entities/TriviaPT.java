@@ -2,6 +2,7 @@ package com.TriviaGame.Trivia.Entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.TriviaGame.Trivia.Interfaces.TriviaI;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.*;
@@ -9,7 +10,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name="triviaPT")
-public class TriviaPT {
+public class TriviaPT implements TriviaI {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("level")

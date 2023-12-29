@@ -46,6 +46,9 @@
 				  <swal-title th:text="#{LOST}" color="#ffffff">
 				    ¡Has perdido!
 				  </swal-title>
+				  <swal-text th:text="#{SCORE}" color="#ffffff">
+				    Tu score es: <p th:text="${trivia.score}"></p>
+				  </swal-text>
 				  <swal-icon type="warning" color="red"></swal-icon>
 				  <swal-button th:text="#{NEW-GAME}" class="button" color="#05587C" text-color="#000000" type="confirm" onclick="backToMenu()">
 				    Juega otra vez
