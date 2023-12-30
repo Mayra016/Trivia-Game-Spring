@@ -57,7 +57,7 @@
 			
 			<div class="word">
 				<span th:text="${trivia.underscores}"></span>
-				<span class="letters" th:text="${trivia.letters}"></span>
+				<span id="letters" class="letters" th:text="${currentGame.letters}" th:unless="${trivia.letters != currentGame.letters}"></span>
 				<input th:field="${trivia.userInput}" class="word-input" type="text" />
 
 				
@@ -66,7 +66,7 @@
 				<input class="button" id="userInput" type="button" th:value="#{SEND}" onclick="checkAnswer()"/>
 			</div>
 
-		    <audio autoplay loop th:volume="0.7">
+		    <audio autoplay loop th:volume="0.5">
 		        <source th:src="@{/music/musik.mp3}" type="audio/mp3">
 		    </audio>		
 		</div>
@@ -88,6 +88,29 @@
 	function menu() {
 		window.location.href = "/menu";
 	}
+	
+    function updateLetters() {
+        setInterval(function() {
+            fetch('/getLetters')
+                .then(response => response.text())
+                .then(data => {
+                    // Update letters value through the time
+                    if (data==null) {
+						data=" ";
+					}
+                    document.getElementById('letters').innerText = data;
+                	console.log(data);
+                });
+                
+        }, 1000); // It will be executed each second
+    }
+    
+	document.addEventListener('DOMContentLoaded', function () {
+	    updateLetters();
+	});
+
+    
+	
 </script>
 </body>
 </html>
