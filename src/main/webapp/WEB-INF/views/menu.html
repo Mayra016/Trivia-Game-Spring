@@ -29,8 +29,10 @@
 				<img src="/images/ornitorrincoVF.png" alt="Logo ornitorrinco">
 			</div>
 			
-
-		
+		    <audio id="backgroundMusic" autoplay loop th:volume="0.7">
+		        <source th:src="@{/music/musik.mp3}" type="audio/mp3">
+		    </audio>
+				
 		</div>
 		
 	</div>
@@ -39,14 +41,36 @@
         var url = /*[[@{/nextLevel}]]*/ '';
         window.location.href = url;
     }
+    
     function languages() {
         var url = "/languages";
         window.location.href = url;
     }
-        function info() {
+    
+    function info() {
         var url = "/infos";
         window.location.href = url;
     }
+    
+    function music() {
+		    document.addEventListener("DOMContentLoaded", function() {
+        // Obtener el elemento de audio
+        var audio = document.getElementById("backgroundMusic");
+
+        // Obtener el tiempo actual de reproducción desde el almacenamiento local
+        var savedTime = localStorage.getItem("backgroundMusicTime");
+
+        // Restaurar el tiempo actual de reproducción si está disponible
+        if (savedTime !== null) {
+            audio.currentTime = parseFloat(savedTime);
+        }
+
+        // Guardar el tiempo actual de reproducción al cerrar la página
+        window.addEventListener("beforeunload", function() {
+            localStorage.setItem("backgroundMusicTime", audio.currentTime.toString());
+        });
+    });
+	}
 </script>		
 	
 </body>
