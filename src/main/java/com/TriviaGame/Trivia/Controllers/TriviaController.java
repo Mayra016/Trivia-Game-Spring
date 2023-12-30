@@ -68,6 +68,11 @@ public class TriviaController {
     	return "languages";
     }
     
+    @GetMapping("infos")
+    public String getInfoPage() {
+    	return "infos";
+    }
+    
     @GetMapping("/menu/{language}")
     public String changeLanguage(@PathVariable String language, HttpServletRequest request) {
     	service.setLanguage(language);
@@ -82,7 +87,7 @@ public class TriviaController {
         } else if ("DE".equals(language)) {
             newLocale = new Locale("de");
         } else {
-            newLocale = new Locale("en"); //default
+            newLocale = new Locale("es"); //default
         }
         localeResolver.setLocale(request, null, newLocale);   	
     	return "redirect:/menu";
@@ -120,7 +125,7 @@ public class TriviaController {
         	trivia = service.getLevelDE(level);
         }
     	trivia.setScore(persistentData.getScore());
-    	if (trivia.getClue1().contains("1.")) {
+    	if (trivia.getClue1().contains("1.1.")) {
     		trivia.setClue1(service.removeNumberAndDot(trivia.getClue1()));
     		trivia.setClue2(service.removeNumberAndDot(trivia.getClue2()));
     		trivia.setClue3(service.removeNumberAndDot(trivia.getClue3()));

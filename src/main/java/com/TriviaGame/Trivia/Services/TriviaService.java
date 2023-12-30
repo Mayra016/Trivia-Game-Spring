@@ -43,7 +43,7 @@ public class TriviaService {
     
     Long currentLevelService;
     TriviaI currentGame = new Trivia();
-    String appLanguage = "EN";
+    String appLanguage = "ES";
     
     // Set app language to evaluate from which data basis should be the level infos get from
     public void setLanguage(String language) {
@@ -69,6 +69,8 @@ public class TriviaService {
     		levelsNum = repositoryDE.count() - 1;
     	} else if (appLanguage.equals("EN")) {
     		levelsNum = repositoryEN.count() - 1;
+    	} else {
+    		levelsNum = repository.count() - 1;
     	}
     	
     	Random randomize = new Random();
@@ -247,6 +249,9 @@ public class TriviaService {
             } else if ("DE".equals(appLanguage)) {
             	Optional<TriviaDE> gameDE = repositoryDE.findById(level);
                 trivia = gameDE.get();
+            } else {
+            	game = repository.findById(level);
+                trivia = game.get();
             }
         	
             if (trivia!=null) {
@@ -339,6 +344,8 @@ public class TriviaService {
     		levels = repositoryDE.count() - 1;
     	} else if (appLanguage == "EN") {
     		levels = repositoryEN.count() - 1;
+    	} else {
+    		levels = repository.count() - 1;
     	}
         Long nextLevel = randomize.nextLong(1, levels);
         Long currentLevel = trivia.getLevel();
