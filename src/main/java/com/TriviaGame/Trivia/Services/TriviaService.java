@@ -83,9 +83,21 @@ public class TriviaService {
         this.currentLevelService = level;
     	Optional<Trivia> game = repository.findById(level);
     	Trivia game2 = game.get();
-    	Trivia newGame = new Trivia(level, game2.getClue1(), game2.getClue2(), game2.getClue3(), game2.getWord());
+    	String[] splitClue1 = game2.getClue1().split("1\\.");
+    	String clue1 = game2.getClue1().contains("1.") ? removeNumberAndDot(game2.getClue1()) : game2.getClue1();
+        String clue2 = game2.getClue2().contains("2.") ? removeNumberAndDot(game2.getClue2()) : game2.getClue2();
+        String clue3 = game2.getClue3().contains("3.") ? removeNumberAndDot(game2.getClue3()): game2.getClue3();
+        System.out.println("getLevel clue1" + clue1);
+        Trivia newGame = new Trivia(level, clue1, clue2, clue3, game2.getWord());
         return newGame;
     }
+  
+    // It will replace the numbers on the beginning, so that it doesn't show duplicated
+    public String removeNumberAndDot(String clue) {
+    	System.out.println("Se ejecutó remove");
+        return clue.matches("\\d+\\..*") ? clue.replaceFirst("\\d+\\.\\s*", "") : clue;
+    }
+    
     
 	// LOAD PORTUGUESE LEVEL
 	public TriviaPT getLevelPT(Long level) {

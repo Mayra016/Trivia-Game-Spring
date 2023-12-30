@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 public class TriviaDTO {
 	private byte lifes;
 	private List<Long> playedLevels;
+	private int score;
 	
 	public TriviaDTO() {
 		this.lifes = 4;
@@ -29,5 +30,13 @@ public class TriviaDTO {
 
 	public List<Long> getPlayedLevels() {
 		return this.playedLevels;
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
 	}
 }

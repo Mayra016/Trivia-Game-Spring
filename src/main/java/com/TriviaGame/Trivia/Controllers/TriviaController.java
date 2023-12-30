@@ -30,6 +30,10 @@ import com.TriviaGame.Trivia.Services.TriviaService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.servlet.LocaleResolver;
 
+/*
+ * 
+ * EN INGLÉS LOS NÚMEROS 1. 2. 3. ESTÁN DUPLICADOS
+ */
 
 @Controller
 public class TriviaController {
@@ -115,6 +119,12 @@ public class TriviaController {
         } else if ("DE".equals(appLanguage)) {
         	trivia = service.getLevelDE(level);
         }
+    	trivia.setScore(persistentData.getScore());
+    	if (trivia.getClue1().contains("1.")) {
+    		trivia.setClue1(service.removeNumberAndDot(trivia.getClue1()));
+    		trivia.setClue2(service.removeNumberAndDot(trivia.getClue2()));
+    		trivia.setClue3(service.removeNumberAndDot(trivia.getClue3()));
+    	}	
     	
         if (trivia!=null && persistentData.getLifes()==4) {
         	trivia.setStartTime();
@@ -214,11 +224,14 @@ public class TriviaController {
         if (persistentData.getLifes()!=4) {
 	        trivia.setLifes(persistentData.getLifes());
 	        trivia.setPlayedLevels(persistentData.getPlayedLevels());
+	        trivia.setScore(persistentData.getScore());
         }    
         if (trivia!=null) {
         	
         	System.out.println("Lifes (antes): " + trivia.getLifes());
         	byte lifes = trivia.getLifes();
+        	trivia.setScore(persistentData.getScore());
+        	System.out.println(trivia.getClue1());
         	model.addAttribute("trivia", trivia);
         	boolean win = service.compareAnswer(level, userInput); 
         	System.out.println(win);
@@ -227,6 +240,7 @@ public class TriviaController {
         		System.out.println("Score" + trivia.getScore());
         		TriviaI nextLevel = service.chooseNextLevel(trivia);
         		persistentData.setLifes(lifes);
+        		persistentData.setScore(persistentData.getScore()+10);
         		persistentData.setPlayedLevels(trivia.getPlayedLevels(), level);
         		model.addAttribute("trivia", trivia);
         		model.addAttribute("persistentData", persistentData);
@@ -242,7 +256,6 @@ public class TriviaController {
         	}
         	if ( win == false && lifes <= 0) {
         		trivia.getPlayedLevels().clear();
-	        	service.calculateScore(level);
 	        	trivia = new Trivia();
 	        	trivia = null;
 	        	model.addAttribute("persistentData", persistentData);
