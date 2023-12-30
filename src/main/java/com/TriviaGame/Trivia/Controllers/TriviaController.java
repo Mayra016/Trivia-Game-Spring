@@ -1,7 +1,9 @@
 package com.TriviaGame.Trivia.Controllers;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -110,11 +112,21 @@ public class TriviaController {
     	return "lost";
     }
     
+    @GetMapping("/getLetters")
+    @ResponseBody
+    public Map<String, Object> getLetters() {
+    	TriviaI currentGame = service.activeTimeOption();
+        Map<String, Object> response = new HashMap<>();
+        response.put("letters", currentGame.getLetters());
+    	return response;
+    }
+    
     // CHECK THE LANGUAGE TO OBTAIN THE LEVEL FROM THE RESPECTIVE DATA BASIS
     @GetMapping("/{level}")
     public String home(@PathVariable Long level, Model model) {
     	Trivia game = service.getLevel(level);
         TriviaI trivia = game;
+        TriviaI currentGame = service.activeTimeOption();
     	if ("ES".equals(appLanguage)) {
             trivia = service.getLevel(level);
         } else if ("EN".equals(appLanguage)) {
@@ -143,7 +155,11 @@ public class TriviaController {
         	trivia.setLifes(persistentData.getLifes());
         	trivia.setPlayedLevels(persistentData.getPlayedLevels());
         }
+        if (currentGame.getAlive()==false) {
+        	return "lost";
+        }
         model.addAttribute("trivia", trivia);
+        model.addAttribute("currentGame", currentGame);
         model.addAttribute("persistentData", persistentData);
         return "level"; 
     }
@@ -213,6 +229,7 @@ public class TriviaController {
     @GetMapping("/checkAnswer/{level}/{userInput}")
     public String checkAnswer(@PathVariable Long level, @PathVariable String userInput, Model model) {
     	Trivia game = service.getLevel(level);
+    	TriviaI currentGame = service.activeTimeOption();
         TriviaI trivia = game;
     	if ("ES".equals(appLanguage)) {
             trivia = service.getLevel(level);
@@ -245,7 +262,7 @@ public class TriviaController {
         		System.out.println("Score" + trivia.getScore());
         		TriviaI nextLevel = service.chooseNextLevel(trivia);
         		persistentData.setLifes(lifes);
-        		persistentData.setScore(persistentData.getScore()+10);
+        		persistentData.setScore(persistentData.getScore()+currentGame.getScoreMultiplier());
         		persistentData.setPlayedLevels(trivia.getPlayedLevels(), level);
         		model.addAttribute("trivia", trivia);
         		model.addAttribute("persistentData", persistentData);
@@ -255,6 +272,7 @@ public class TriviaController {
         		trivia = service.reduceLife(lifes, trivia);
         		persistentData.setLifes(trivia.getLifes());
         		System.out.println("Lifes persistentData: " + persistentData.getLifes());
+        		System.out.println(trivia.getLetters());
         		model.addAttribute("trivia", trivia);
         		model.addAttribute("persistentData", persistentData);
         		return "level";

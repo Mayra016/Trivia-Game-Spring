@@ -14,7 +14,7 @@ import java.util.Locale;
 @EnableJpaRepositories(basePackages = "com.TriviaGame.Trivia.Repositories")
 @ComponentScan(basePackages = "com.TriviaGame.Trivia")
 @EntityScan(basePackages = "com.TriviaGame.Trivia.Entities")
-//@EnableScheduling
+@EnableScheduling
 public class TriviaApplication {
 
 	public static void main(String[] args) {        

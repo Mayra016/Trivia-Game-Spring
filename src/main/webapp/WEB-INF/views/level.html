@@ -57,7 +57,7 @@
 			
 			<div class="word">
 				<span th:text="${trivia.underscores}"></span>
-				<span id="letters" class="letters" th:text="${currentGame.letters}" th:unless="${trivia.letters != currentGame.letters}"></span>
+				<span id="lettersGame" class="letters" th:text="${currentGame.letters}"></span>
 				<input th:field="${trivia.userInput}" class="word-input" type="text" />
 
 				
@@ -74,6 +74,7 @@
 	</div>
 		
 <script th:inline="javascript">
+	var time;
 	function checkAnswer() {
         var level = /*[[${trivia.level}]]*/;
         var userInput = document.getElementById('userInput').value;
@@ -89,27 +90,43 @@
 		window.location.href = "/menu";
 	}
 	
-    function updateLetters() {
-        setInterval(function() {
-            fetch('/getLetters')
-                .then(response => response.text())
-                .then(data => {
-                    // Update letters value through the time
-                    if (data==null) {
-						data=" ";
-					}
-                    document.getElementById('letters').innerText = data;
-                	console.log(data);
-                });
-                
-        }, 1000); // It will be executed each second
-    }
-    
-	document.addEventListener('DOMContentLoaded', function () {
-	    updateLetters();
-	});
-
-    
+	function fetchLetters() {
+	    var csrfTokenElement = document.querySelector("meta[name='_csrf']");
+	    var csrfToken = csrfTokenElement ? csrfTokenElement.getAttribute("content") : null;
+	
+	    var csrfHeaderElement = document.querySelector("meta[name='_csrf_header']");
+	    var csrfHeader = csrfHeaderElement ? csrfHeaderElement.getAttribute("content") : null;
+	
+	    // Enviar el token con cada solicitud
+	    fetch('http://localhost:8080/getLetters', {
+	        method: 'GET',
+	        headers: {
+	            'Content-Type': 'application/json',
+	            [csrfHeader]: csrfToken
+	        }
+	    })
+	    .then(response => response.json())
+	    .then(data => {
+	        console.log("Received letters:", data.letters);
+	
+	        var lettersElement = document.getElementById('lettersGame');
+	        if (lettersElement) {
+	            lettersElement.innerText = data.letters;
+	        } else {
+	            console.error("Element with ID 'lettersGame' not found.");
+	        }
+	    })
+	    .catch(error => {
+	        console.error("Error fetching letters:", error);
+	    });
+	}
+	
+	// Llamar a fetchLetters al cargar la página
+	//window.onload = fetchLetters;
+	
+	// Llamar a fetchLetters cada segundo
+	time = setInterval(fetchLetters, 3000);
+	
 	
 </script>
 </body>

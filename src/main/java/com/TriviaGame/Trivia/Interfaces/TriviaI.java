@@ -33,10 +33,17 @@ public interface TriviaI {
 	void setLevel(Long level);
 
 	void setScoreMultiplier(byte newScoreMultiplier);
+	byte getScoreMultiplier();
 
 	void setAlive(boolean newAlive);
 
 	int getScore();
 	void setScore(int newScore);
+	
+	String getLetters();
+	void setLetters(String newLetters);
+	
+
+	
 	
 }

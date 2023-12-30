@@ -207,7 +207,7 @@ span {
 }
 
 .letters {
-display: flex;
+  display: flex;
   position: absolute;
   font-family: 'Bebas Neue', sans-serif;
   font-size: 30px;
@@ -219,8 +219,10 @@ display: flex;
   top: -37px;
   color: white;
   left: 49.3%; /* Centra horizontalmente respecto al contenedor padre */
-  word-spacing: 25px;
+  word-spacing: 6px;
+  width: auto;
   transform: translateX(-50%);
+  white-space: pre-wrap;
 }
 
 

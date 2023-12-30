@@ -15,6 +15,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import com.TriviaGame.Trivia.Entities.Trivia;
 import com.TriviaGame.Trivia.Entities.TriviaDE;
@@ -77,6 +78,8 @@ public class TriviaService {
     	Long nextLevel = randomize.nextLong(1, levelsNum);
     	this.currentGame.setLifes((byte) 3);
     	this.currentGame.setPlayedLevels(null);
+    	this.currentGame.setAlive(true);
+    	this.currentGame.setScoreMultiplier((byte)30);
     	return nextLevel;
     }
     
@@ -91,6 +94,9 @@ public class TriviaService {
         String clue3 = game2.getClue3().contains("3.") ? removeNumberAndDot(game2.getClue3()): game2.getClue3();
         System.out.println("getLevel clue1" + clue1);
         Trivia newGame = new Trivia(level, clue1, clue2, clue3, game2.getWord());
+        currentGame.setWord(newGame.getWord());
+        currentGame.setLetters("");
+        currentGame.setStartTime();
         return newGame;
     }
   
@@ -274,42 +280,55 @@ public class TriviaService {
     
     // CHECK TIME 
     @Scheduled(fixedDelay = 1000)
-    public void activeTimeOptions() {
+    public TriviaI activeTimeOption() {
     	if (currentLevelService != null) {
-    		Optional<Trivia> currentLevel = repository.findById(currentLevelService);
-    		
-	        if (currentLevel.isPresent()) {
-	        	Trivia game = currentLevel.get();
-	        	String word = game.getWord();
-	    		String letters = game.getLetters();
-	        	long currentTime = System.currentTimeMillis() - game.getStartTime();
+	        if (currentGame!=null) {
+	        	String word = currentGame.getWord();
+	    		String letters = currentGame.getLetters();
+	        	long currentTime = System.currentTimeMillis() - currentGame.getStartTime();
+	        	System.out.println(TimeUnit.MILLISECONDS.toSeconds(currentTime));
 	        	// In 9 seconds will the first clue letter be displayed on screen
 	        	if (TimeUnit.MILLISECONDS.toSeconds(currentTime) == 9 && letters.length() < 1) {       		
 	        		letters = letters.concat(Character.toString(word.charAt(0)));
-	        		game.setScoreMultiplier((byte)30);
+	                byte spaces = (byte) (word.length() - 1);
+	                for (byte i = 1; i <= spaces; i++) {
+	                    System.out.println(letters);
+	                    letters = letters.concat(" ");
+	                }
+	                
+	                currentGame.setScoreMultiplier((byte)30);
+	        		currentGame.setLetters(letters);
+	        		System.out.println("9 s" + currentGame.getLetters());
 	        	}
 	        	
 	        	// In 22 seconds will the third clue letter be displayed on screen
-	        	if (TimeUnit.MILLISECONDS.toSeconds(currentTime) == 22 && letters.length() < 2) { 
-	        		letters = letters.concat(" ");
-	        		letters = letters.concat(Character.toString(word.charAt(2)));
-	        		game.setScoreMultiplier((byte)20);
+	        	if (TimeUnit.MILLISECONDS.toSeconds(currentTime) == 22) { 
+	                byte spaces = (byte) (word.length() - 3);
+	                
+	                letters = letters.substring(0,2);
+	                letters = letters.concat(Character.toString(word.charAt(2)));
+	                for (byte i = 1; i <= spaces; i++) {
+	                    System.out.println(letters);
+	                    letters = letters.concat(" ");
+	                }
+	        		currentGame.setScoreMultiplier((byte)20);
+	        		currentGame.setLetters(letters);
+	        		System.out.println("22s" +letters);
 	        	}
 	        	
 	        	// In 40 seconds will the last clue letter be displayed on screen
-	        	if (TimeUnit.MILLISECONDS.toSeconds(currentTime) == 40 && letters.length() < word.length()) { 
-	        		byte spaces = (byte) (word.length() - 4);
-	        		for (byte i = 1; i <= spaces; i++) {
-	        			letters.concat(" ");
-	        		}      		
-	        		letters.concat(Character.toString(word.charAt(word.length()-1)));
-	        		game.setScoreMultiplier((byte)10);
+	        	if (TimeUnit.MILLISECONDS.toSeconds(currentTime) == 40) { 
+	        		letters = letters.substring(0, word.length()-1);
+	                letters = letters.concat(Character.toString(word.charAt(word.length() - 1)));
+	        		currentGame.setScoreMultiplier((byte)10);
+	        		currentGame.setLetters(letters);
 	        	}
 	        	if (TimeUnit.MILLISECONDS.toMinutes(currentTime) >= 3) {       		
-	        		game.setAlive(false);
+	        		currentGame.setAlive(false);
 	        	}
 	        }	
         }
+    	return currentGame;
         
     }
     
