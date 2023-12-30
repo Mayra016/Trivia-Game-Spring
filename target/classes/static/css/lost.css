@@ -22,10 +22,10 @@ body {
     height: 100%;
 }
 
-.button {
+.button, .menu-btn, .score {
     font-family: 'Spicy Rice', serif;
     font-size: 20px;
-    background-color: yellow;
+    background-color: #ffe100;
     border-color: #004554;
     border-radius: 10px;
     border-width: 5px;
@@ -36,6 +36,39 @@ body {
     text-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
     transition: transform 0.3s ease;
 }
+.menu-btn {
+	width: auto;
+}
+
+.menu-btn:hover {
+    border-color: #4EE3FB;
+    transform: scale(1.07);	
+}
+.menu-logo {
+	width: 20px;
+	height: 20px;
+	padding-bottom: 5px;
+	margin-rigth: 5px;	
+}
+
+.score {
+	display: flex;
+	flex-direction: row;
+	width: auto;
+	text-align: center;
+	padding: 3px 8px;
+	gap: 10px;
+	border: 5px solid;
+	margin-right: 200px;
+}
+
+.score h5, .score h6 {	
+	margin-top: 3px;
+	margin-bottom: 0;
+	padding-bottom: 0;
+	font-size: 20px;
+}
+
 
 .button:hover {
     border-color: #4EE3FB;
@@ -208,6 +241,11 @@ display: flex;
 
 }
 
+.tittle, .header-bar {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
 
 
 

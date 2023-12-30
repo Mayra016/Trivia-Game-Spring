@@ -18,6 +18,15 @@
 <body onload="deleteUser()">
 	<div class="page-background">
 		<div class="container" th:object="${trivia}">
+			<div class="header-bar">
+				<button class="menu-btn" onclick="menu()">
+				    <img class="menu-logo" src="/images/menu-logo.png" alt="menu logo" />
+				    Menu
+				</button>
+				<div class="score">
+					<h5>Score: <h6 th:text="${trivia.score}"></h6></h5>
+				</div>	
+			</div>
 			<div class="tittle">
 				<h1 th:text="#{TRIVIA}">TRIVIA</h1>
 				<th:block th:with="persistentLifes=${persistentData.lifes}"></th:block>
@@ -46,9 +55,9 @@
 				  <swal-title th:text="#{LOST}" color="#ffffff">
 				    ¡Has perdido!
 				  </swal-title>
-				  <swal-text th:text="#{SCORE}" color="#ffffff">
-				    Tu score es: <p th:text="${trivia.score}"></p>
-				  </swal-text>
+			      <swal-text color="#ffffff">
+			          Tu score es: <span th:text="${trivia.score}"></span>
+			      </swal-text>
 				  <swal-icon type="warning" color="red"></swal-icon>
 				  <swal-button th:text="#{NEW-GAME}" class="button" color="#05587C" text-color="#000000" type="confirm" onclick="backToMenu()">
 				    Juega otra vez
