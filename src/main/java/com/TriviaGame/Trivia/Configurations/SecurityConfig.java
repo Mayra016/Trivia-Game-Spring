@@ -12,29 +12,35 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig extends WebSecurityConfiguration {
 
-    @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         // Configuración de usuarios en memoria (solo para propósitos de ejemplo)
         auth.inMemoryAuthentication()
             .withUser("user")
-            .password("userTest32@")
-            .roles("USER");
+            .password(passwordEncoder().encode("user_GoyaZuleNajwa32@"))
+            .roles("ADMIN");
     }
 
-    @Override
     protected void configure(HttpSecurity http) throws Exception {
         // Configuración de autorización
         http.authorizeRequests()
-            .requestMatchers("/public/**").permitAll()  // Rutas públicas
-            .anyRequest().authenticated()  // Todas las demás rutas requieren autenticación
-            .and()
-            .formLogin().permitAll()  // Configuración de inicio de sesión
-            .and()
-            .logout().permitAll();  // Configuración de cierre de sesión
+	        .requestMatchers("/menu", "/{level}", "/languages", "/infos", "/menu/{language}", "/lost").permitAll()
+	        .requestMatchers("/levels", "/add/**", "/updateData/**", "/update/**", "/delete/**").hasRole("ADMIN")
+	        .anyRequest().authenticated()  // Todas las demás rutas requieren autenticación
+	        .and()
+	        .formLogin()
+	            .loginPage("/login")  // Página de inicio de sesión personalizada si es necesario
+	            .permitAll()
+	        .and()
+	        .logout()
+	            .logoutUrl("/logout")  // URL de cierre de sesión personalizada si es necesario
+	            .logoutSuccessUrl("/login?logout")  // Página de inicio de sesión con mensaje de cierre de sesión
+	            .permitAll();
+
     }
 
     @Bean
@@ -46,7 +52,11 @@ public class SecurityConfig extends WebSecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://localhost:tuPuerto"); // Reemplaza con tu dominio y puerto
+        configuration.addAllowedOrigin("https://peculiaridadesdelmundo.blogspot.com");
+        configuration.addAllowedOrigin("https://peculiaridadesdomundoblog.blogspot.com");
+        configuration.addAllowedOrigin("https://besonderheitenderwelt.blogspot.com");
+        configuration.addAllowedOrigin("https://peculiaritiesoftheworld.blogspot.com");
+        configuration.addAllowedOrigin("http://localhost:8080"); 
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(true);

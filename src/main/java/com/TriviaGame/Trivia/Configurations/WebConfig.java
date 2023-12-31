@@ -14,9 +14,8 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/images/favicon.ico").addResourceLocations("classpath:/static/");
     }
-    @Override
     public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("/favicon.ico");
+        web.ignoring().requestMatchers("/images/favicon.ico");
     }
 
 }

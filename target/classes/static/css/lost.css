@@ -36,8 +36,13 @@ body {
     text-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
     transition: transform 0.3s ease;
 }
+
 .menu-btn {
+	display: flex;
+	flex-direction: row;
 	width: auto;
+	padding: 0px 8px;
+	gap: 3px;
 }
 
 .menu-btn:hover {
@@ -47,8 +52,12 @@ body {
 .menu-logo {
 	width: 20px;
 	height: 20px;
-	padding-bottom: 5px;
-	margin-rigth: 5px;	
+	margin-top: 8px;
+	margin-rigth: 8px;	
+}
+
+.menu-btn h5 {
+	margin-top: 6px;
 }
 
 .score {

@@ -37,18 +37,27 @@ body {
     transition: transform 0.3s ease;
 }
 .menu-btn {
+	display: flex;
+	flex-direction: row;
 	width: auto;
+	padding: 0px 8px;
+	gap: 3px;
 }
 
 .menu-btn:hover {
     border-color: #4EE3FB;
     transform: scale(1.07);	
 }
+
 .menu-logo {
 	width: 20px;
 	height: 20px;
-	padding-bottom: 5px;
+	margin-top: 8px;
 	margin-rigth: 5px;	
+}
+
+.menu-btn h5 {
+	margin-top: 8px;
 }
 
 .score {
@@ -134,6 +143,7 @@ p, span {
 	padding-bottom: 20px;
 	transition: transform 1s ease;
 	transform-style: preserve-3d;
+	transition: transform 1s ease, filter 0.5s ease; 
 }
 
 div .lives {
@@ -144,6 +154,7 @@ div .lives {
 
 div .lives img:hover {
 	animation: rotate 3s linear infinite;
+	box-shadow: drop-shadow(10px 10px 20px rgba(0, 0, 0, 0.3));
 }
 
 @keyframes rotate {
@@ -207,7 +218,7 @@ span {
 }
 
 .letters {
-display: flex;
+  display: flex;
   position: absolute;
   font-family: 'Bebas Neue', sans-serif;
   font-size: 30px;
@@ -219,8 +230,10 @@ display: flex;
   top: -37px;
   color: white;
   left: 49.3%; /* Centra horizontalmente respecto al contenedor padre */
-  word-spacing: 25px;
+  word-spacing: 6px;
+  width: auto;
   transform: translateX(-50%);
+  white-space: pre-wrap;
 }
 
 
@@ -241,6 +254,7 @@ display: flex;
     text-align: center;
     word-spacing: 6px;
     letter-spacing: 10px;
+    width: auto;
 }
 
 

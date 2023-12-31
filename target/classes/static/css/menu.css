@@ -22,7 +22,7 @@ body {
     height: 100%;
 }
 
-.button {
+.button, .menu-btn {
     font-family: 'Spicy Rice', serif;
     font-size: 20px;
     background-color: yellow;
@@ -91,4 +91,67 @@ div .tittle, h1 {
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
     text-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
     justify-content: center;
+}
+
+/* INFO PAGE */
+
+.menu-btn {
+	width: auto;
+}
+
+.menu-btn:hover {
+    border-color: #4EE3FB;
+    transform: scale(1.07);	
+}
+.menu-logo {
+	width: 20px;
+	height: 20px;
+	padding-bottom: 5px;
+	margin-rigth: 5px;	
+}
+.header-bar {
+	display: flex;
+	justify-items: left;
+	padding-left: 130px;
+	padding-bottom: 100px;
+}
+
+.intro-text {
+	padding-bottom: 40px;
+	color: white;
+	    font-family: 'Spicy Rice', serif;
+    font-size: 20px;
+}
+
+.youtube-logo {
+	width: 40px;
+	heigth: 40px;
+}
+
+a {
+	text-decoration: none;
+	color: white;	
+}
+
+a:hover {
+	color: yellow;
+}
+
+.menu-btn {
+	display: flex;
+	flex-direction: row;
+	width: auto;
+	padding: 0px 8px;
+	gap: 3px;
+}
+
+.menu-logo {
+	width: 20px;
+	height: 20px;
+	margin-top: 10px;
+	margin-rigth: 5px;	
+}
+
+.menu-btn h5 {
+	margin-top: 6px;
 }
