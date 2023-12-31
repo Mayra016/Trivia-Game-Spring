@@ -48,7 +48,7 @@ public class TriviaController {
     private LocaleResolver localeResolver;
     String appLanguage;
     ResourceBundle resourceBundle = ResourceBundle.getBundle("text");
-    
+    TriviaI trivia;
     // READ
     @GetMapping("favicon.ico")
     @ResponseBody
@@ -116,6 +116,7 @@ public class TriviaController {
     @ResponseBody
     public Map<String, Object> getLetters() {
     	TriviaI currentGame = service.activeTimeOption();
+    	trivia.setLetters(currentGame.getLetters());
         Map<String, Object> response = new HashMap<>();
         response.put("letters", currentGame.getLetters());
     	return response;
@@ -125,8 +126,9 @@ public class TriviaController {
     @GetMapping("/{level}")
     public String home(@PathVariable Long level, Model model) {
     	Trivia game = service.getLevel(level);
-        TriviaI trivia = game;
+        trivia = game;
         TriviaI currentGame = service.activeTimeOption();
+        trivia.setLetters(currentGame.getLetters());
     	if ("ES".equals(appLanguage)) {
             trivia = service.getLevel(level);
         } else if ("EN".equals(appLanguage)) {
@@ -144,16 +146,19 @@ public class TriviaController {
     	}	
     	
         if (trivia!=null && persistentData.getLifes()==4) {
-        	trivia.setStartTime();
         	System.out.println("Nuevo nivel lifes: " + trivia.getLifes());
         	System.out.println(trivia.getClue1() + trivia.getAlive() + "\n" + trivia.getLifes());       	
         	System.out.println(trivia.getWord() + "\n" + trivia.getStartTime());       	
-
+            if (currentGame.getAlive()==false) {
+            	return "lost";
+            }
         } else if (trivia!=null && persistentData.getLifes()<4) {        	
         	System.out.println("Usando el persistentData");
-        	trivia.setStartTime();
         	trivia.setLifes(persistentData.getLifes());
         	trivia.setPlayedLevels(persistentData.getPlayedLevels());
+            if (currentGame.getAlive()==false) {
+            	return "lost";
+            }
         }
         if (currentGame.getAlive()==false) {
         	return "lost";
@@ -247,6 +252,7 @@ public class TriviaController {
 	        trivia.setLifes(persistentData.getLifes());
 	        trivia.setPlayedLevels(persistentData.getPlayedLevels());
 	        trivia.setScore(persistentData.getScore());
+	        trivia.setLetters(currentGame.getLetters());
         }    
         if (trivia!=null) {
         	

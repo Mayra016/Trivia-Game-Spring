@@ -57,7 +57,7 @@
 			
 			<div class="word">
 				<span th:text="${trivia.underscores}"></span>
-				<span id="lettersGame" class="letters" th:text="${currentGame.letters}"></span>
+				<span id="lettersGame" class="letters" th:text="${currentGame != null ? currentGame.letters : trivia.letters}" ></span>
 				<input th:field="${trivia.userInput}" class="word-input" type="text" />
 
 				
