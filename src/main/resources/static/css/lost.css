@@ -38,6 +38,7 @@ body {
 }
 .menu-btn {
 	width: auto;
+	padding: 0px 8px;
 }
 
 .menu-btn:hover {
