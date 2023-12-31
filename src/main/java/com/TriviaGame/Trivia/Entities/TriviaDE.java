@@ -54,9 +54,9 @@ public class TriviaDE implements TriviaI {
     public TriviaDE(Long level, String clue1, String clue2, String clue3, String word) {       
     	this.startTime = System.currentTimeMillis();
     	this.level = level;
-        this.clue1 = "1. " + clue1;
-        this.clue2 = "2. " + clue2;
-        this.clue3 = "3. " + clue3;
+        this.clue1 = clue1.contains("1.") ? clue1 : "1. " + clue1;
+        this.clue2 = clue2.contains("2.") ? clue2 : "2. " + clue2;
+        this.clue3 = clue3.contains("3.") ? clue3 : "3. " + clue3;
         this.word = word;
         lifes = (byte) 3;
         this.alive = true;

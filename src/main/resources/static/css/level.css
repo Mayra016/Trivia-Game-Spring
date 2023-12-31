@@ -37,19 +37,27 @@ body {
     transition: transform 0.3s ease;
 }
 .menu-btn {
+	display: flex;
+	flex-direction: row;
 	width: auto;
 	padding: 0px 8px;
+	gap: 3px;
 }
 
 .menu-btn:hover {
     border-color: #4EE3FB;
     transform: scale(1.07);	
 }
+
 .menu-logo {
 	width: 20px;
 	height: 20px;
-	padding-bottom: 5px;
+	margin-top: 8px;
 	margin-rigth: 5px;	
+}
+
+.menu-btn h5 {
+	margin-top: 8px;
 }
 
 .score {

@@ -202,7 +202,7 @@ public class TriviaService {
     public void updateDataBase(int initialLevel, int finalLevel, String language) throws Exception {
         try {
             // Opción 2: Utilizar la variable 'inp' obtenida del ClassLoader directamente
-            Resource resource = new ClassPathResource("static/Trivia 30.04.xlsx");
+            Resource resource = new ClassPathResource("static/Trivia 31.12.xlsx");
             File file = resource.getFile();
             try (InputStream inp = new FileInputStream(file)) {
                 Workbook workbook = new XSSFWorkbook(inp);
@@ -253,6 +253,7 @@ public class TriviaService {
             }           
         } catch (IOException e) {
             System.out.println("exception");
+            System.out.println(e);     
             throw e;
         } catch (Exception p) {
             System.out.println(p);

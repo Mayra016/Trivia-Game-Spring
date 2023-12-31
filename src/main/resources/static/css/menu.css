@@ -137,3 +137,21 @@ a:hover {
 	color: yellow;
 }
 
+.menu-btn {
+	display: flex;
+	flex-direction: row;
+	width: auto;
+	padding: 0px 8px;
+	gap: 3px;
+}
+
+.menu-logo {
+	width: 20px;
+	height: 20px;
+	margin-top: 10px;
+	margin-rigth: 5px;	
+}
+
+.menu-btn h5 {
+	margin-top: 6px;
+}
