@@ -2,12 +2,15 @@ package com.TriviaGame.Trivia.Configurations;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -15,6 +18,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @EnableWebSecurity
 @Configuration
+@Order(1) 
 public class SecurityConfig extends WebSecurityConfiguration {
 
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -25,22 +29,22 @@ public class SecurityConfig extends WebSecurityConfiguration {
             .roles("ADMIN");
     }
 
-    protected void configure(HttpSecurity http) throws Exception {
-        // Configuración de autorización
-        http.authorizeRequests()
-	        .requestMatchers("/menu", "/{level}", "/languages", "/infos", "/menu/{language}", "/lost").permitAll()
-	        .requestMatchers("/levels", "/add/**", "/updateData/**", "/update/**", "/delete/**").hasRole("ADMIN")
-	        .anyRequest().authenticated()  // Todas las demás rutas requieren autenticación
-	        .and()
-	        .formLogin()
-	            .loginPage("/login")  // Página de inicio de sesión personalizada si es necesario
-	            .permitAll()
-	        .and()
-	        .logout()
-	            .logoutUrl("/logout")  // URL de cierre de sesión personalizada si es necesario
-	            .logoutSuccessUrl("/login?logout")  // Página de inicio de sesión con mensaje de cierre de sesión
-	            .permitAll();
 
+    @SuppressWarnings("removal")
+	@Bean
+    public SecurityFilterChain configure(HttpSecurity http) throws Exception {
+      http
+          .authorizeHttpRequests(requests -> requests
+              .requestMatchers(new AntPathRequestMatcher("/menu/**")).permitAll()
+              .requestMatchers(new AntPathRequestMatcher("/{level}/**")).permitAll()
+              .requestMatchers(new AntPathRequestMatcher("/lost")).permitAll()
+              .requestMatchers(new AntPathRequestMatcher("/infos")).permitAll()
+              .requestMatchers(new AntPathRequestMatcher("/languages")).permitAll()
+              .requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
+              .requestMatchers(new AntPathRequestMatcher("/images/**")).permitAll()
+              .anyRequest().authenticated())
+          .httpBasic();
+      return http.build();
     }
 
     @Bean
