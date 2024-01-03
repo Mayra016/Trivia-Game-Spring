@@ -27,7 +27,10 @@ public class SecurityConfig extends WebSecurityConfiguration {
 
     protected void configure(HttpSecurity http) throws Exception {
         // Configuración de autorización
-        http.authorizeRequests()
+        http
+		    .headers()
+		      .addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
+        	.authorizeRequests()
 	        .requestMatchers("/menu", "/{level}", "/languages", "/infos", "/menu/{language}", "/lost").permitAll()
 	        .requestMatchers("/levels", "/add/**", "/updateData/**", "/update/**", "/delete/**").hasRole("ADMIN")
 	        .anyRequest().authenticated()  // Todas las demás rutas requieren autenticación
