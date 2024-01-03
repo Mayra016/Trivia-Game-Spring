@@ -31,6 +31,7 @@ import com.TriviaGame.Trivia.Services.TriviaService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 
 /*
  * 
@@ -45,7 +46,7 @@ public class TriviaController {
     @Autowired
     TriviaDTO persistentData = new TriviaDTO();
     @Autowired
-    private LocaleResolver localeResolver;
+    private LocaleResolver localeResolver = new CookieLocaleResolver();
     String appLanguage;
     ResourceBundle resourceBundle = ResourceBundle.getBundle("text");
     TriviaI trivia;
