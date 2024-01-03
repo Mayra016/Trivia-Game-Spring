@@ -292,8 +292,12 @@ span {
 
 }
 
+@media only screen and (max-width: 800px) {
+	div .lives {
+		padding-right: 100px;
+    }	
 
-
+}
 
 
 
