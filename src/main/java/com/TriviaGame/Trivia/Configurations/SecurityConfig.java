@@ -1,8 +1,12 @@
 package com.TriviaGame.Trivia.Configurations;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
@@ -15,21 +19,31 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @EnableWebSecurity
 @Configuration
+@Order(1) 
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+@PropertySource("classpath:infra/private.properties")
 public class SecurityConfig extends WebSecurityConfiguration {
-
+	@Value("${USERNAME}")
+	String username;
+	@Value("${PASSWORD}")
+	String password;
+	
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         // Configuración de usuarios en memoria (solo para propósitos de ejemplo)
         auth.inMemoryAuthentication()
-            .withUser("user")
-            .password(passwordEncoder().encode("user_GoyaZuleNajwa32@"))
+            .withUser(username)
+            .password(passwordEncoder().encode(password))
             .roles("ADMIN");
     }
 
     protected void configure(HttpSecurity http) throws Exception {
         // Configuración de autorización
         http
-		    .headers()
-		      .addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
+        	.headers(headers -> headers
+                .frameOptions(frameOptions -> frameOptions
+                    .disable()
+                )
+            )
         	.authorizeRequests()
 	        .requestMatchers("/menu", "/{level}", "/languages", "/infos", "/menu/{language}", "/lost").permitAll()
 	        .requestMatchers("/levels", "/add/**", "/updateData/**", "/update/**", "/delete/**").hasRole("ADMIN")
