@@ -82,6 +82,8 @@ public class TriviaService {
     	this.currentGame.setPlayedLevels(null);
     	this.currentGame.setAlive(true);
     	this.currentGame.setScoreMultiplier((byte)30);
+    	this.currentGame.setLetters("");
+    	this.currentGame.setStartTime();
     	return nextLevel;
     }
     

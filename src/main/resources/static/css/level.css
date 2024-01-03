@@ -128,6 +128,7 @@ h3 {
 
 .word-section {
 	display: inline-block;
+	width: auto;
 }
 
 p, span {
