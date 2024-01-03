@@ -1,6 +1,7 @@
 package com.TriviaGame.Trivia.Configurations;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.server.ConfigurableWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 
@@ -19,6 +20,9 @@ public class WebConfig implements WebMvcConfigurer {
     }
     public void configure(WebSecurity web) {
         web.ignoring().requestMatchers("/images/favicon.ico");
+    }
+    public void customize(ConfigurableWebServerFactory factory) {
+        factory.setPort(port);
     }
 
 }

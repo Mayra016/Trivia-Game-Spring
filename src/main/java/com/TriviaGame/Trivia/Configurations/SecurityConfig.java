@@ -5,69 +5,102 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.DefaultSecurityFilterChain;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.TriviaGame.Trivia.Services.CustomUserDetailsService;
 
 
 @EnableWebSecurity
 @Configuration
 @Order(1) 
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@PropertySource("classpath:infra/private.properties")
 public class SecurityConfig extends WebSecurityConfiguration {
 	@Value("${USERNAME}")
 	String username;
 	@Value("${PASSWORD}")
 	String password;
 	
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        // Configuración de usuarios en memoria (solo para propósitos de ejemplo)
-        auth.inMemoryAuthentication()
-            .withUser(username)
-            .password(passwordEncoder().encode(password))
-            .roles("ADMIN");
-    }
 
-    protected void configure(HttpSecurity http) throws Exception {
-        // Configuración de autorización
+    @Bean
+    public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
         	.headers(headers -> headers
                 .frameOptions(frameOptions -> frameOptions
                     .disable()
                 )
             )
-        	.authorizeRequests()
-	        .requestMatchers("/menu", "/{level}", "/languages", "/infos", "/menu/{language}", "/lost").permitAll()
-	        .requestMatchers("/levels", "/add/**", "/updateData/**", "/update/**", "/delete/**").hasRole("ADMIN")
-	        .anyRequest().authenticated()  // Todas las demás rutas requieren autenticación
-	        .and()
-	        .formLogin()
-	            .loginPage("/login")  // Página de inicio de sesión personalizada si es necesario
-	            .permitAll()
-	        .and()
-	        .logout()
-	            .logoutUrl("/logout")  // URL de cierre de sesión personalizada si es necesario
-	            .logoutSuccessUrl("/login?logout")  // Página de inicio de sesión con mensaje de cierre de sesión
-	            .permitAll();
+            .authorizeHttpRequests(requests -> requests
+                    .requestMatchers(new AntPathRequestMatcher("/menu/**")).permitAll()
+                    .requestMatchers(new AntPathRequestMatcher("/{level}/**")).permitAll()
+                    .requestMatchers(new AntPathRequestMatcher("/lost")).permitAll()
+                    .requestMatchers(new AntPathRequestMatcher("/infos")).permitAll()
+                    .requestMatchers(new AntPathRequestMatcher("/languages")).permitAll()
+                    .requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
+                    .requestMatchers(new AntPathRequestMatcher("/images/**")).permitAll()
+                    .requestMatchers(new AntPathRequestMatcher("/levels")).authenticated()
+                    .requestMatchers(new AntPathRequestMatcher("/updateData/**")).authenticated()
+                    .requestMatchers(new AntPathRequestMatcher("/update/**")).authenticated()
+                    .requestMatchers(new AntPathRequestMatcher("/add/**")).authenticated()
+                    .requestMatchers(new AntPathRequestMatcher("/delete/**")).authenticated()
+                    .anyRequest().authenticated())
+                .formLogin()
+                    .successHandler(new SavedRequestAwareAuthenticationSuccessHandler())
+      	          .permitAll()
+      	          .and()
+      	      .logout()
+      	      	  .logoutSuccessUrl("/login?logout")
+      	          .permitAll()
+      	          .and()
+      	      .exceptionHandling()
+      	      	.accessDeniedPage("/login");
 
-    }
+
+            return http.build();
+          }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        // Para propósitos de ejemplo, se utiliza un codificador sin encriptación
-        return NoOpPasswordEncoder.getInstance();
-    }
+	public PasswordEncoder passwordEncoder() {
+		
+	    return new BCryptPasswordEncoder();
+	}
+	
+	@Bean
+	public DaoAuthenticationProvider authenticationProvider() {
+	    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+	    authProvider.setUserDetailsService(userDetailsService());
+	    authProvider.setPasswordEncoder(passwordEncoder());
+	    return authProvider;
+	}
+	
+
     
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+    public CustomUserDetailsService userDetailsService() {
+        return new CustomUserDetailsService();
+    }
+
+
+
+    @Bean
+    private static CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("https://peculiaridadesdelmundo.blogspot.com");
         configuration.addAllowedOrigin("https://peculiaridadesdomundoblog.blogspot.com");
@@ -82,5 +115,10 @@ public class SecurityConfig extends WebSecurityConfiguration {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-}
-
+    
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED);
+    }
+}   
+    
