@@ -319,11 +319,9 @@ public class TriviaController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String updateDataBaseLevels(@PathVariable String secret_pass, @PathVariable int initialLevel, @PathVariable int finalLevel, @PathVariable String language) {
     	String code = resourceBundle.getString("PASS");
-    	String pass = secret_pass;
     	if (secret_pass.equals(code)) {
 	    	try {
 	    		service.updateDataBase(initialLevel, finalLevel, language);
-	    		List<Trivia> updatedLevels = service.findAll();
 	            return "redirect:/levels";
 	    	} catch (Exception e) {
 	    		return "redirect:/levels";

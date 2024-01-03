@@ -10,7 +10,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-@PropertySource("classpath:infra/private.properties")
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Value("${USERNAME}")
