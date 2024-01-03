@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -95,7 +96,9 @@ public class TriviaController {
     	return "redirect:/menu";
     }
     
+    
     @GetMapping("levels") 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String getLevels(Model model) {
     	List<Trivia> levels = service.findAll();
     	model.addAttribute("levels", levels);
@@ -302,6 +305,7 @@ public class TriviaController {
     
     // CREATE
     @PostMapping("/add/{level}/{clue1}/{clue2}/{clue3}/{word}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String addNewLevelDB(@PathVariable Long level, @PathVariable String clue1, @PathVariable String clue2, @PathVariable String clue3, @PathVariable String word) {
     	try {
     		service.addNewLevel(level, clue1, clue2, clue3, word);
@@ -312,6 +316,7 @@ public class TriviaController {
     }
     
     @GetMapping("updateData/{secret_pass}/{initialLevel}/{finalLevel}/{language}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String updateDataBaseLevels(@PathVariable String secret_pass, @PathVariable int initialLevel, @PathVariable int finalLevel, @PathVariable String language) {
     	String code = resourceBundle.getString("PASS");
     	String pass = secret_pass;
@@ -330,6 +335,7 @@ public class TriviaController {
     
     // UPDATE
     @PutMapping("/update/{level}/{clue1}/{clue2}/{clue3}/{word}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String updateThisLevel(@PathVariable Long level, @PathVariable String clue1, @PathVariable String clue2, @PathVariable String clue3, @PathVariable String word){
         try {
         	service.updateLevel(level, clue1, clue2, clue3, word);  
@@ -341,6 +347,7 @@ public class TriviaController {
     
     // 
     @DeleteMapping("/delete/{level}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String deleteThisLevel(@PathVariable Long level) {
         try {
         	service.deleteLevel(level);
