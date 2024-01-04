@@ -9,9 +9,11 @@ public class TriviaDTO {
 	private byte lifes;
 	private List<Long> playedLevels;
 	private int score;
+	private Long level;
 	
 	public TriviaDTO() {
 		this.lifes = 4;
+		this.level = (long) -1;
 	}
 	
 	public void setLifes(byte newLifes) {
@@ -38,5 +40,13 @@ public class TriviaDTO {
 
 	public void setScore(int score) {
 		this.score = score;
+	}
+	
+	public void setLevel(Long newLevel) {
+		this.level = newLevel;
+	}
+	
+	public Long getLevel() {
+		return this.level;
 	}
 }

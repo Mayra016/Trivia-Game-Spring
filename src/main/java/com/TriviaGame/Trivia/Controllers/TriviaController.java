@@ -60,9 +60,8 @@ public class TriviaController {
     
     @GetMapping("menu") 
     public String getMenu() {
-    	if (persistentData!=null) {
-    		persistentData = new TriviaDTO();
-    	}
+    	persistentData = new TriviaDTO();
+    	service.setCurrentGameAlive(true);
     
     	return "menu";
     }
@@ -128,25 +127,22 @@ public class TriviaController {
     // CHECK THE LANGUAGE TO OBTAIN THE LEVEL FROM THE RESPECTIVE DATA BASIS
     @GetMapping("/{level}")
     public String home(@PathVariable Long level, Model model) {
-    	Trivia game = service.getLevel(level);
-        trivia = game;
+    	List<Long> playedLevelsPersistent;
+    	try {
+    		playedLevelsPersistent = persistentData.getPlayedLevels();
+    		if (playedLevelsPersistent.contains(level)) {
+        		
+        	} else {
+        		trivia = service.getLevel(level);
+        	}
+    	} catch (Exception e ) {
+    		System.out.print(e);
+    		trivia = service.getLevel(level);
+    	}
+    	
         TriviaI currentGame = service.activeTimeOption();
         trivia.setLetters(currentGame.getLetters());
-    	if ("ES".equals(appLanguage)) {
-            trivia = service.getLevel(level);
-        } else if ("EN".equals(appLanguage)) {
-        	trivia = service.getLevelEN(level);
-        } else if ("PT".equals(appLanguage)) {
-        	trivia = service.getLevelPT(level);
-        } else if ("DE".equals(appLanguage)) {
-        	trivia = service.getLevelDE(level);
-        }
     	trivia.setScore(persistentData.getScore());
-    	if (trivia.getClue1().contains("1.1.")) {
-    		trivia.setClue1(service.removeNumberAndDot(trivia.getClue1()));
-    		trivia.setClue2(service.removeNumberAndDot(trivia.getClue2()));
-    		trivia.setClue3(service.removeNumberAndDot(trivia.getClue3()));
-    	}	
     	
         if (trivia!=null && persistentData.getLifes()==4) {
         	System.out.println("Nuevo nivel lifes: " + trivia.getLifes());
@@ -236,18 +232,7 @@ public class TriviaController {
     
     @GetMapping("/checkAnswer/{level}/{userInput}")
     public String checkAnswer(@PathVariable Long level, @PathVariable String userInput, Model model) {
-    	Trivia game = service.getLevel(level);
     	TriviaI currentGame = service.activeTimeOption();
-        TriviaI trivia = game;
-    	if ("ES".equals(appLanguage)) {
-            trivia = service.getLevel(level);
-        } else if ("EN".equals(appLanguage)) {
-        	trivia = service.getLevelEN(level);
-        } else if ("PT".equals(appLanguage)) {
-        	trivia = service.getLevelPT(level);
-        } else if ("DE".equals(appLanguage)) {
-        	trivia = service.getLevelDE(level);
-        }
         if (userInput==null) {
         	userInput = "";
         }
@@ -269,13 +254,14 @@ public class TriviaController {
         	if ( win &&  lifes > 0 ) {
         		System.out.println(win + "lifes>0");
         		System.out.println("Score" + trivia.getScore());
-        		TriviaI nextLevel = service.chooseNextLevel(trivia);
+        		Long nextLevel = service.chooseNextLevel(trivia);
         		persistentData.setLifes(lifes);
         		persistentData.setScore(persistentData.getScore()+currentGame.getScoreMultiplier());
         		persistentData.setPlayedLevels(trivia.getPlayedLevels(), level);
+        		trivia.setLetters("");     
         		model.addAttribute("trivia", trivia);
         		model.addAttribute("persistentData", persistentData);
-        		return "redirect:/".concat(nextLevel.getLevel().toString());
+        		return "redirect:/".concat(nextLevel.toString());
         	} else if ( win == false && lifes > 0) {
         		System.out.println("repuesta" + win + "lifes>0");        	
         		trivia = service.reduceLife(lifes, trivia);

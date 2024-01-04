@@ -43,6 +43,7 @@ public class TriviaService {
     TriviaENRepository repositoryEN;    
     
     Long currentLevelService;
+    Long levelsNum = Long.valueOf(50);; // Number of levels on this language data basis
     TriviaI currentGame = new Trivia();
     String appLanguage = "ES";
     boolean sameLevel = false;
@@ -50,6 +51,11 @@ public class TriviaService {
     // Set app language to evaluate from which data basis should be the level infos get from
     public void setLanguage(String language) {
     	this.appLanguage = language;
+    }
+    
+    // Set alive when start to play
+    public void setCurrentGameAlive(boolean newState) {
+    	this.currentGame.setAlive(newState);
     }
     
     // CRUD
@@ -62,7 +68,6 @@ public class TriviaService {
     
     // GENERATE FIRST LEVEL
     public Long generateLevel() {
-    	Long levelsNum = Long.valueOf(0);
     	if ("ES".equals(appLanguage)) {
     		levelsNum = repository.count() - 1;
     	} else if ("PT".equals(appLanguage)) {
@@ -106,13 +111,12 @@ public class TriviaService {
     		game2 = gameES.get();
     	}
     	if (game2!=null) {
-	    	String[] splitClue1 = game2.getClue1().split("1\\.");
 	    	String clue1 = game2.getClue1().contains("1.") ? removeNumberAndDot(game2.getClue1()) : game2.getClue1();
 	        String clue2 = game2.getClue2().contains("2.") ? removeNumberAndDot(game2.getClue2()) : game2.getClue2();
 	        String clue3 = game2.getClue3().contains("3.") ? removeNumberAndDot(game2.getClue3()): game2.getClue3();
 	        System.out.println("getLevel clue1" + clue1);
 	        Trivia newGame = new Trivia(level, clue1, clue2, clue3, game2.getWord());
-	        currentGame.setWord(newGame.getWord());       
+	        currentGame.setWord(newGame.getWord());   
 	        if (this.sameLevel==false) {
 	        	currentGame.setLetters("");
 	        	currentGame.setStartTime();
@@ -121,7 +125,9 @@ public class TriviaService {
 	        }	
 	        return newGame;
     	} else     {
-    		TriviaI gameI = chooseNextLevel(game2);
+    		Long nextLevel = chooseNextLevel(game2);
+    		getLevel(nextLevel);
+    		Trivia gameI = getLevel(nextLevel);
 	    	String clue1 = gameI.getClue1().contains("1.") ? removeNumberAndDot(gameI.getClue1()) : gameI.getClue1();
 	        String clue2 = gameI.getClue2().contains("2.") ? removeNumberAndDot(gameI.getClue2()) : gameI.getClue2();
 	        String clue3 = gameI.getClue3().contains("3.") ? removeNumberAndDot(gameI.getClue3()): gameI.getClue3();
@@ -274,27 +280,8 @@ public class TriviaService {
     // COMPARE ANSWER
     public boolean compareAnswer(Long level, String userInput) {
     	try {
-    		Optional<Trivia>game = repository.findById(level);
-    		TriviaI trivia = game.get();
-        	if ("ES".equals(appLanguage)) {
-        		game = repository.findById(level);
-                trivia = game.get();
-            } else if ("EN".equals(appLanguage)) {
-            	Optional<TriviaEN> gameEN = repositoryEN.findById(level);
-                trivia = gameEN.get();
-            } else if ("PT".equals(appLanguage)) {
-            	Optional<TriviaPT> gamePT = repositoryPT.findById(level);
-                trivia = gamePT.get();
-            } else if ("DE".equals(appLanguage)) {
-            	Optional<TriviaDE> gameDE = repositoryDE.findById(level);
-                trivia = gameDE.get();
-            } else {
-            	game = repository.findById(level);
-                trivia = game.get();
-            }
-        	
-            if (trivia!=null) {
-    	        String levelAnswer = trivia.getWord();
+    		if (currentGame!=null) {
+    	        String levelAnswer = currentGame.getWord();
     	        if( levelAnswer.equalsIgnoreCase(userInput) ) {
     	        	this.sameLevel = false;
     	            return true;
@@ -323,7 +310,7 @@ public class TriviaService {
     @Scheduled(fixedDelay = 1000)
     public TriviaI activeTimeOption() {
     	if (currentLevelService != null) {
-	        if (currentGame!=null) {
+	        if (currentGame!=null && currentGame.getAlive()==true) {
 	        	String word = currentGame.getWord();
 	    		String letters = currentGame.getLetters();
 	        	long currentTime = System.currentTimeMillis() - currentGame.getStartTime();
@@ -386,38 +373,24 @@ public class TriviaService {
     }
     
     // DETERMINE IF THE PLAYER HAS LOST
-    public boolean hasLost(Long level) {
-        Optional<Trivia> currentLevel = repository.findById(level);
-        Trivia game = currentLevel.get();
+    public boolean hasLost(TriviaI game) {
         return game.getAlive();
     }
     
     // DETERMINE THE NEXT LEVEL
-    public TriviaI chooseNextLevel(TriviaI trivia) {
+    public Long chooseNextLevel(TriviaI trivia) {
         Random randomize = new Random();
-    	Long levelsNum = Long.valueOf(0);
-    	Long levels = Long.valueOf(10);
-    	if ("ES".equals(appLanguage)) {
-    	    levels = repository.count() - 1;
-    	} else if ("PT".equals(appLanguage)) {
-    	    levels = repositoryPT.count() - 1;
-    	} else if ("DE".equals(appLanguage)) {
-    	    levels = repositoryDE.count() - 1;
-    	} else if ("EN".equals(appLanguage)) {
-    	    levels = repositoryEN.count() - 1;
-    	} else {
-    	    levels = repository.count() - 1;
-    	}
-
-        Long nextLevel = randomize.nextLong(1, levels);
+        Long nextLevel = randomize.nextLong(1, levelsNum);
         Long currentLevel = trivia.getLevel();
         List<Long> playedLevels = trivia.getPlayedLevels();
-        while(trivia.getPlayedLevels().contains(nextLevel) || nextLevel == currentLevel) {
+        while(playedLevels.contains(nextLevel) || nextLevel == currentLevel) {
             nextLevel = randomize.nextLong(1, 100);            
-        }
-        if (!trivia.getPlayedLevels().contains(nextLevel)) {
-                Optional<Trivia> newLevel = repository.findById(nextLevel);
-                TriviaI newGame = newLevel.get();
+        } /*
+        if (!playedLevels.contains(nextLevel)) {
+                //Optional<Trivia> newLevel = repository.findById(nextLevel);
+                //TriviaI newGame = newLevel.get();
+                TriviaI newGame = getLevel(nextLevel);
+               
             	if (appLanguage == "ES") {
             		newLevel = repository.findById(nextLevel);
             		newGame = newLevel.get();
@@ -441,8 +414,8 @@ public class TriviaService {
                 trivia.setScoreMultiplier((byte) 30);
                 trivia.setLifes(currentGame.getLifes());
                 currentGame = trivia;
-        }    
-        return trivia;
+        } */   
+        return nextLevel;
     }
     
     
