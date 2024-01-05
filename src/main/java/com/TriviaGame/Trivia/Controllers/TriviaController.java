@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,10 +35,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 
-/*
- * 
- * EN INGLÉS LOS NÚMEROS 1. 2. 3. ESTÁN DUPLICADOS
- */
 
 @Controller
 public class TriviaController {
@@ -51,6 +48,8 @@ public class TriviaController {
     String appLanguage;
     ResourceBundle resourceBundle = ResourceBundle.getBundle("text");
     TriviaI trivia;
+    TriviaI currentGame;
+    
     // READ
     @GetMapping("favicon.ico")
     @ResponseBody
@@ -62,7 +61,9 @@ public class TriviaController {
     public String getMenu() {
     	persistentData = new TriviaDTO();
     	service.setCurrentGameAlive(true);
-    
+    	if (trivia!=null) {
+    		service.resetLetters();
+    	}
     	return "menu";
     }
     
@@ -114,15 +115,7 @@ public class TriviaController {
     	return "lost";
     }
     
-    @GetMapping("/getLetters")
-    @ResponseBody
-    public Map<String, Object> getLetters() {
-    	TriviaI currentGame = service.activeTimeOption();
-    	trivia.setLetters(currentGame.getLetters());
-        Map<String, Object> response = new HashMap<>();
-        response.put("letters", currentGame.getLetters());
-    	return response;
-    }
+
     
     // CHECK THE LANGUAGE TO OBTAIN THE LEVEL FROM THE RESPECTIVE DATA BASIS
     @GetMapping("/{level}")
@@ -140,10 +133,11 @@ public class TriviaController {
     		trivia = service.getLevel(level);
     	}
     	
+        
         TriviaI currentGame = service.activeTimeOption();
         trivia.setLetters(currentGame.getLetters());
     	trivia.setScore(persistentData.getScore());
-    	
+    	System.out.println(currentGame.getLetters() + "Letters al llamar al /level");
         if (trivia!=null && persistentData.getLifes()==4) {
         	System.out.println("Nuevo nivel lifes: " + trivia.getLifes());
         	System.out.println(trivia.getClue1() + trivia.getAlive() + "\n" + trivia.getLifes());       	

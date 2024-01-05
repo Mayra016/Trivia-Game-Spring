@@ -90,9 +90,17 @@ public class TriviaService {
     	return nextLevel;
     }
     
+    // Reset previous game letters and interrupt scheduled execution
+    public void resetLetters() {
+    	this.currentGame.setLetters("");
+    	this.sameLevel=false;
+    	this.currentGame.setAlive(false);
+    }
+    
     // READ LEVEL
     public Trivia getLevel(Long level) {
         this.currentLevelService = level;
+        Trivia newGame;
         TriviaI game2;
     	if (appLanguage.equals("ES")) {
     		Optional<Trivia> gameES = repository.findById(level);
@@ -111,31 +119,32 @@ public class TriviaService {
     		game2 = gameES.get();
     	}
     	if (game2!=null) {
-	    	String clue1 = game2.getClue1().contains("1.") ? removeNumberAndDot(game2.getClue1()) : game2.getClue1();
-	        String clue2 = game2.getClue2().contains("2.") ? removeNumberAndDot(game2.getClue2()) : game2.getClue2();
-	        String clue3 = game2.getClue3().contains("3.") ? removeNumberAndDot(game2.getClue3()): game2.getClue3();
+	    	String clue1 = game2.getClue1();
+	        String clue2 = game2.getClue2();
+	        String clue3 = game2.getClue3();
 	        System.out.println("getLevel clue1" + clue1);
-	        Trivia newGame = new Trivia(level, clue1, clue2, clue3, game2.getWord());
+	        newGame = new Trivia(level, clue1, clue2, clue3, game2.getWord());
 	        currentGame.setWord(newGame.getWord());   
-	        if (this.sameLevel==false) {
-	        	currentGame.setLetters("");
-	        	currentGame.setStartTime();
-	        	currentGame.setAlive(true);
-	        	this.sameLevel = true;
-	        }	
-	        return newGame;
+
     	} else     {
     		Long nextLevel = chooseNextLevel(game2);
     		getLevel(nextLevel);
     		Trivia gameI = getLevel(nextLevel);
-	    	String clue1 = gameI.getClue1().contains("1.") ? removeNumberAndDot(gameI.getClue1()) : gameI.getClue1();
-	        String clue2 = gameI.getClue2().contains("2.") ? removeNumberAndDot(gameI.getClue2()) : gameI.getClue2();
-	        String clue3 = gameI.getClue3().contains("3.") ? removeNumberAndDot(gameI.getClue3()): gameI.getClue3();
+	    	String clue1 = gameI.getClue1();
+	        String clue2 = gameI.getClue2();
+	        String clue3 = gameI.getClue3();
 	        System.out.println("getLevel clue1" + clue1);
-	        Trivia newGame = new Trivia(level, clue1, clue2, clue3, gameI.getWord());
+	        newGame = new Trivia(level, clue1, clue2, clue3, gameI.getWord());
     		return newGame;
     		
     	}
+        if (this.sameLevel==false) {
+        	currentGame.setLetters("");
+        	currentGame.setStartTime();
+        	currentGame.setAlive(true);
+        	this.sameLevel = true;
+        }	
+        return newGame;
     }
   
     // It will replace the numbers on the beginning, so that it doesn't show duplicated
