@@ -90,6 +90,8 @@
 		window.location.href = "/menu";
 	}
 	
+
+	
 	function fetchLetters() {
 	    var csrfTokenElement = document.querySelector("meta[name='_csrf']");
 	    var csrfToken = csrfTokenElement ? csrfTokenElement.getAttribute("content") : null;
@@ -98,8 +100,10 @@
 	    var csrfHeader = csrfHeaderElement ? csrfHeaderElement.getAttribute("content") : null;
 	
 	    // Enviar el token con cada solicitud
-	    fetch('http://localhost:8080/getLetters', {
+	    fetch('https://trivia-game-spring.up.railway.app/getLetters', {
 	        method: 'GET',
+	        mode: 'cors',
+	        credentials: 'include',
 	        headers: {
 	            'Content-Type': 'application/json',
 	            [csrfHeader]: csrfToken

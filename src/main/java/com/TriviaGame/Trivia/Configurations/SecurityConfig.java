@@ -47,6 +47,8 @@ public class SecurityConfig extends WebSecurityConfiguration {
                     .disable()
                 )
             )
+        	.cors().configurationSource(corsConfigurationSource())
+        	.and()
             .authorizeHttpRequests(requests -> requests
                     .requestMatchers(new AntPathRequestMatcher("/menu/**")).permitAll()
                     .requestMatchers(new AntPathRequestMatcher("/{level}/**")).permitAll()
@@ -107,8 +109,12 @@ public class SecurityConfig extends WebSecurityConfiguration {
         configuration.addAllowedOrigin("https://besonderheitenderwelt.blogspot.com");
         configuration.addAllowedOrigin("https://peculiaritiesoftheworld.blogspot.com");
         configuration.addAllowedOrigin("http://localhost:8080"); 
-        configuration.addAllowedMethod("*");
-        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("GET");
+        configuration.addAllowedMethod("POST");
+        configuration.addAllowedHeader("Access-Control-Allow-Headers");
+        configuration.addAllowedHeader("Content-Type");
+        configuration.addAllowedHeader("X-Token");
+
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
