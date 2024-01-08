@@ -1,5 +1,7 @@
 package com.TriviaGame.Trivia.Configurations;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,14 +20,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.TriviaGame.Trivia.Services.CustomUserDetailsService;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 
 @EnableWebSecurity
@@ -39,15 +48,30 @@ public class SecurityConfig extends WebSecurityConfiguration {
 	String password;
 	
 	
-	  @Bean
+	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 	    http
-	      .requiresChannel(channel -> 
-	          channel.anyRequest().requiresSecure())
-	      .authorizeRequests(authorize ->
-	          authorize.anyRequest().permitAll());
+	        .requiresChannel(channel -> channel.anyRequest().requiresSecure())
+	        .authorizeRequests(authorize -> authorize.anyRequest().permitAll())
+	        .portMapper().http(80).mapsTo(443)  // Mapea el puerto 80 a 443 para la redirección
+	        .and()
+	        .addFilterBefore(new RedirectToHttpsFilter(), ChannelProcessingFilter.class);
+	        
 	      return http.build();
 	}
+	
+    private static class RedirectToHttpsFilter extends OncePerRequestFilter {
+        @Override
+        protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+                throws ServletException, IOException {
+            if (!request.isSecure()) {
+                String redirectUrl = "https://" + request.getServerName() + request.getRequestURI();
+                response.sendRedirect(redirectUrl);
+            } else {
+                filterChain.doFilter(request, response);
+            }
+        }
+    }
 
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
