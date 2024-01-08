@@ -38,6 +38,16 @@ public class SecurityConfig extends WebSecurityConfiguration {
 	@Value("${PASSWORD}")
 	String password;
 	
+	
+	  @Bean
+	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+	    http
+	      .requiresChannel(channel -> 
+	          channel.anyRequest().requiresSecure())
+	      .authorizeRequests(authorize ->
+	          authorize.anyRequest().permitAll());
+	      return http.build();
+	}
 
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
