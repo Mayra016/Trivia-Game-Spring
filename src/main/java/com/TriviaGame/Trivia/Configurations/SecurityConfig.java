@@ -49,7 +49,7 @@ public class SecurityConfig extends WebSecurityConfiguration {
 	
 	
 	@Bean
-	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+	public static SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 	    http
 	        .requiresChannel(channel -> channel.anyRequest().requiresSecure())
 	        .authorizeRequests(authorize -> authorize.anyRequest().permitAll())
@@ -83,7 +83,16 @@ public class SecurityConfig extends WebSecurityConfiguration {
             )
         	.cors().configurationSource(corsConfigurationSource())
         	.and()
-            .authorizeHttpRequests(requests -> requests
+            .requiresChannel()
+            .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
+            .requiresSecure()
+	        .and()
+	        .authorizeRequests()
+	        .and()
+	        .portMapper()
+	            .http(8080).mapsTo(8443)
+	        .and()    
+	        .authorizeRequests(requests -> requests
                     .requestMatchers(new AntPathRequestMatcher("/menu/**")).permitAll()
                     .requestMatchers(new AntPathRequestMatcher("/{level}/**")).permitAll()
                     .requestMatchers(new AntPathRequestMatcher("/lost")).permitAll()
