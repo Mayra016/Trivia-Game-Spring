@@ -39,7 +39,7 @@
 <script th:inline="javascript">
     function redirectToNextLevel() {
         var nextLevel = /*[[@{/nextLevel}]]*/;
-        var url = "https://trivia-game-spring-http.up.railway.app/nextLevel";
+        var url = "https://trivia-game-spring-http.up.railway.app" + nextLevel;
         window.location.href = url;
     }
     

@@ -108,7 +108,7 @@ public class TriviaController {
     
     @GetMapping("nextLevel")
     public String generateLevel() {
-    	return "redirect:/https://trivia-game-spring-http.up.railway.app/".concat(service.generateLevel().toString());
+    	return "redirect:/".concat(service.generateLevel().toString());
     }
     
     @GetMapping("lost") 
