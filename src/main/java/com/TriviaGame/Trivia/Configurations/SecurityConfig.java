@@ -176,10 +176,6 @@ public class SecurityConfig extends WebSecurityConfiguration {
         return source;
     }
     
-    @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint() {
-        return new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED);
-    }
     
     @Bean
     public ServletWebServerFactory servletContainer() {
@@ -201,9 +197,9 @@ public class SecurityConfig extends WebSecurityConfiguration {
     private Connector redirectConnector() {
         Connector connector = new Connector(TomcatServletWebServerFactory.DEFAULT_PROTOCOL);
         connector.setScheme("http");
-        connector.setPort(8080); // Puerto HTTP
+        connector.setPort(8080); // HTTP PORT
         connector.setSecure(false);
-        connector.setRedirectPort(8443); // Puerto HTTPS
+        connector.setRedirectPort(8443); // HTTPS PORT
         return connector;
     }
     
