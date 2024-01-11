@@ -65,6 +65,9 @@ public class SecurityConfig extends WebSecurityConfiguration {
                 .frameOptions(frameOptions -> frameOptions
                     .disable()
                 )
+                .httpStrictTransportSecurity()
+                .maxAgeInSeconds(0)
+                .includeSubDomains(true)
             )
         	.cors().configurationSource(corsConfigurationSource())
         	.and()
