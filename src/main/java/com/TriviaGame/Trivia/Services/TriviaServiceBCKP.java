@@ -135,7 +135,6 @@ public class TriviaServiceBCKP {
 	                String clue1 = sheet.getRow((int) level).getCell(1).getStringCellValue();
 	                String clue2 = sheet.getRow((int) level).getCell(2).getStringCellValue();
 	                String clue3 = sheet.getRow((int) level).getCell(3).getStringCellValue();
-	                Long newLong= Long.valueOf(level);
 			    	Trivia newLevel = new Trivia((long) level, clue1, clue2, clue3, word);
 			    	System.out.println(word);
 			    	System.out.println("Dentro del try");
