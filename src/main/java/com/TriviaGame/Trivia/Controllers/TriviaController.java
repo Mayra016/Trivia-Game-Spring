@@ -78,13 +78,13 @@ public class TriviaController {
     	return "infos";
     }
     
-    @GetMapping("/menu/{language}")
+    @GetMapping("/menu/{language}/")
     public String changeLanguage(@PathVariable String language, HttpServletRequest request) {
     	service.setLanguage(language);
     	this.appLanguage = language;
     	Locale newLocale;
     	if ("ES".equals(language)) {
-            newLocale = new Locale("es");
+            newLocale = new Locale("es", "ES");
         } else if ("EN".equals(language)) {
             newLocale = new Locale("en");
         } else if ("PT".equals(language)) {
