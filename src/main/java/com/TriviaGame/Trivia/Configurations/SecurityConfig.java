@@ -68,10 +68,6 @@ public class SecurityConfig extends WebSecurityConfiguration {
             )
         	.cors().configurationSource(corsConfigurationSource())
         	.and()
-            .requiresChannel()
-            .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
-            .requiresSecure()
-	        .and()
 	        .authorizeRequests()
 	        .and()    
 	        .authorizeRequests(requests -> requests
