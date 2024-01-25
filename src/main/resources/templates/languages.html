@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Trivia Game Menu</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=EB+Garamond:wght@600;700;800&family=Spicy+Rice&display=swap" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="/css/menu.css">
+
+
+</head>
+<body>
+	<div class="page-background">
+		<div class="container">
+			<div clas="tittle">
+				<h1 th:text="#{GAME}">Juego de Trivia</h1>
+			</div>
+			
+			<div class="btns">
+				<button class="button-flags" onclick="redirect('ES')">
+				    <img class="flags" src="/images/ES.png" alt="Español">
+				</button>
+				
+				<button class="button-flags" onclick="redirect('PT')">
+				    <img class="flags" src="/images/PT.png" alt="Português">
+				</button>
+				
+				<button class="button-flags" onclick="redirect('EN')">
+				    <img class="flags" src="/images/EN.png" alt="English">
+				</button>
+				
+				<button class="button-flags" onclick="redirect('DE')">
+				    <img class="flags" src="/images/DE.png" alt="Deutsch">
+				</button>
+
+			</div>	
+			<div class="ornitorrinco">
+				<img src="/images/ornitorrincoVF.png" alt="Logo ornitorrinco">
+			</div>
+
+		    <audio autoplay loop th:volume="0.5">
+		        <source th:src="@{/music/musik.mp3}" type="audio/mp3">
+		    </audio>			
+
+		
+		</div>
+		
+	</div>
+<script th:inline="javascript">
+    function redirect(language) {
+        var url = "/menu/" + language;
+        window.location.href = url;
+    }
+</script>		
+	
+</body>
+</html>

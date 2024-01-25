@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Trivia Game Menu</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=EB+Garamond:wght@600;700;800&family=Spicy+Rice&display=swap" rel="stylesheet">
+	<link rel="icon" href="/images/ornitorrincoVF.png" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/css/lost.css">
+	<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+</head>
+<body onload="deleteUser()">
+	<div class="page-background">
+		<div class="container" th:object="${trivia}">
+			<div class="header-bar">
+				<button class="menu-btn" onclick="menu()">
+				    <img class="menu-logo" src="/images/menu-logo.png" alt="menu logo" />
+				    <h5 th:text="#{MENU}"></h5>
+				</button>
+				<div class="score">
+					<h5>Score: <h6 th:text="${trivia.score}"></h6></h5>
+				</div>	
+			</div>
+			<div class="tittle">
+				<h1 th:text="#{TRIVIA}">TRIVIA</h1>
+				<th:block th:with="persistentLifes=${persistentData.lifes}"></th:block>
+				<div class="lives">
+				    <img th:each="life,iterStat : ${#numbers.sequence(1,  (persistentLifes == null || persistentLifes == -1) ? trivia.lifes : persistentLifes)}" 
+				         th:src="@{/images/heart.png}" 
+				         th:alt="Heart" 
+				         th:title="${'Life ' + (iterStat.index + 1)}"
+				         th:if="${trivia.lifes > 0}" />
+				</div>
+
+			</div>
+			<div class="subtittle">
+				<h2 th:text="#{SUBTITTLE}">¡Adivina la palabra!</h2>
+			</div>
+			<br>
+			<div class="clue">
+				<h3 th:text="#{CLUES}">PISTAS</h3>
+			</div>
+			
+			<div class="clues">
+				<p th:text="${trivia.clue1}"></p>
+				<p th:text="${trivia.clue2}"></p>
+				<p th:text="${trivia.clue3}"></p>
+				<template id="my-template" class="my-template" color="#05587C">
+				  <swal-title th:text="#{LOST}" color="#ffffff">
+				    ¡Has perdido!
+				  </swal-title>
+			      <swal-text color="#ffffff">
+			          Tu score es: <span th:text="${trivia.score}"></span>
+			      </swal-text>
+				  <swal-icon type="warning" color="red"></swal-icon>
+				  <swal-button th:text="#{NEW-GAME}" class="button" color="#05587C" text-color="#000000" type="confirm" onclick="backToMenu()">
+				    Juega otra vez
+				  </swal-button>
+				  <swal-param name="allowEscapeKey" value="false" />
+				  <swal-param
+				    name="customClass"
+				    value='{ "popup": "my-popup" }' />
+				  <swal-function-param
+				    name="didOpen"
+				    value="popup => console.log(popup)" />
+				</template>
+			</div>
+		
+			<div class="word-section">
+				<h3 th:text="#{WORD-SECTION}">PALABRA</h3>
+			</div>
+			
+			<div class="word">
+				<span th:text="${trivia.underscores}"></span>
+				<span class="letters" th:text="${trivia.letters}"></span>
+				<input th:field="${trivia.userInput}" class="word-input" type="text" />
+
+				
+			</div>
+			<div class="btn-div">
+				<input class="button" id="userInput" type="button" th:value="#{SEND}" onclick=""/>
+			</div>
+			
+		    <audio autoplay loop th:volume="0.5">
+		        <source th:src="@{/music/musik.mp3}" type="audio/mp3">
+		    </audio>		
+		</div>
+		
+	</div>
+		
+<script th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+        deleteUser();
+    });
+
+    function deleteUser() {
+        var scoreElement = document.getElementById("score");
+        console.log("Se ha llamado la función");
+
+        Swal.fire({
+			customClass: { confirmButton: 'swalBtnColor' },
+            template: "#my-template"
+        })
+        .then((result) => {
+            if (result.isConfirmed) {
+                var url = "/menu";
+                window.location.href = url;
+            }
+        });
+
+
+    }
+    function backToMenu() {
+		var url = "/menu";
+        window.location.href = url;
+	}
+</script>
+
+</body>
+</html>
