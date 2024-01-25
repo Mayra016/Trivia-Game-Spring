@@ -16,11 +16,13 @@ ENV USERNAME=${USERNAME}
 ARG PASSWORD
 ENV PASSWORD=${PASSWORD}
 
+WORKDIR /usr/src
+
 COPY . .
 RUN mvn clean package -DskipTests
 
 FROM openjdk:17.0.1-jdk-slim
-COPY --from=build /target/Trivia-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /usr/src/target/Trivia-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
 
