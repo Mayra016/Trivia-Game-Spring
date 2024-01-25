@@ -55,7 +55,8 @@ public class SecurityConfig extends WebSecurityConfiguration {
 	String username;
 	@Value("${PASSWORD}")
 	String password;
-
+	
+	
  
     @SuppressWarnings({ "removal", "deprecation" })
 	@Bean
@@ -65,14 +66,15 @@ public class SecurityConfig extends WebSecurityConfiguration {
                 .frameOptions(frameOptions -> frameOptions
                     .disable()
                 )
-                .httpStrictTransportSecurity()
-                .maxAgeInSeconds(0)
-                .includeSubDomains(true)
             )
         	.cors().configurationSource(corsConfigurationSource())
         	.and()
+            .requiresChannel()
+            .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
+            .requiresSecure()
+	        .and()
 	        .authorizeRequests()
-	        .and()    
+	        .and() 
 	        .authorizeRequests(requests -> requests
                     .requestMatchers(new AntPathRequestMatcher("/menu/**")).permitAll()
                     .requestMatchers(new AntPathRequestMatcher("/{level}/**")).permitAll()
@@ -116,7 +118,6 @@ public class SecurityConfig extends WebSecurityConfiguration {
 	    return authProvider;
 	}
 	
-
     
     @Bean
     public CustomUserDetailsService userDetailsService() {
@@ -133,6 +134,7 @@ public class SecurityConfig extends WebSecurityConfiguration {
         configuration.addAllowedOrigin("https://besonderheitenderwelt.blogspot.com");
         configuration.addAllowedOrigin("https://peculiaritiesoftheworld.blogspot.com");
         configuration.addAllowedOrigin("http://localhost:8080"); 
+        configuration.addAllowedOrigin("http://localhost:8443"); 
         configuration.addAllowedMethod("GET");
         configuration.addAllowedMethod("POST");
         configuration.addAllowedHeader("Access-Control-Allow-Headers");
@@ -145,6 +147,8 @@ public class SecurityConfig extends WebSecurityConfiguration {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+    
+   
     
 
 }   
