@@ -133,6 +133,7 @@ public class SecurityConfig extends WebSecurityConfiguration {
         configuration.addAllowedOrigin("https://peculiaridadesdomundoblog.blogspot.com");
         configuration.addAllowedOrigin("https://besonderheitenderwelt.blogspot.com");
         configuration.addAllowedOrigin("https://peculiaritiesoftheworld.blogspot.com");
+	configuration.addAllowedOrigin("https://trivia-game-zjet.onrender.com/");
         configuration.addAllowedOrigin("http://localhost:8080"); 
         configuration.addAllowedOrigin("http://localhost:8443"); 
         configuration.addAllowedMethod("GET");
