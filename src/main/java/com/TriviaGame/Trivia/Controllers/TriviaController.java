@@ -85,7 +85,7 @@ public class TriviaController {
     	this.appLanguage = language;
     	Locale newLocale;
     	if ("ES".equals(language)) {
-            newLocale = new Locale("es");
+            newLocale = new Locale("es", "ES");
         } else if ("EN".equals(language)) {
             newLocale = new Locale("en");
         } else if ("PT".equals(language)) {
