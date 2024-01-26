@@ -59,7 +59,7 @@ public class TriviaController {
         
     }
     
-    @GetMapping("menu") 
+    @GetMapping("/menu") 
     public String getMenu() {
     	persistentData = new TriviaDTO();
     	service.setCurrentGameAlive(true);
