@@ -78,7 +78,7 @@ public class TriviaController {
     	return "infos";
     }
     
-    @GetMapping("/menu/{language}/")
+    @GetMapping("/menu/{language}")
     public String changeLanguage(@PathVariable String language, HttpServletRequest request) {
     	service.setLanguage(language);
     	this.appLanguage = language;
@@ -95,7 +95,7 @@ public class TriviaController {
             newLocale = new Locale("es"); //default
         }
         localeResolver.setLocale(request, null, newLocale);   	
-    	return "menu";
+    	return "redirect:/menu";
     }
     
     @GetMapping("levels") 
