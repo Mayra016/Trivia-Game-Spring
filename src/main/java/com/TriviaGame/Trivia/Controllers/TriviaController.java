@@ -95,7 +95,7 @@ public class TriviaController {
             newLocale = new Locale("es"); //default
         }
         localeResolver.setLocale(request, null, newLocale);   	
-    	return "redirect:/menu";
+    	return "menu";
     }
     
     @GetMapping("levels") 
